@@ -2,41 +2,43 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport"
-      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
-<title>Broken Bonez Mobile</title>
+<meta name="viewport"
+content="width=device-width,
+initial-scale=1,
+maximum-scale=1,
+user-scalable=no">
+
+<title>Broken Bonez</title>
 
 <style>
+
 *{
     box-sizing:border-box;
-    -webkit-tap-highlight-color:transparent;
+    margin:0;
+    padding:0;
     user-select:none;
+    -webkit-user-select:none;
+    -webkit-touch-callout:none;
+    -webkit-tap-highlight-color:transparent;
 }
 
-html,body{
-    margin:0;
+html,
+body{
     width:100%;
     height:100%;
     overflow:hidden;
     background:#111;
-    font-family:Arial,Helvetica,sans-serif;
     touch-action:none;
-}
-
-body{
-    display:flex;
-    justify-content:center;
-    align-items:center;
+    font-family:Arial,Helvetica,sans-serif;
 }
 
 #game{
     position:relative;
     width:100vw;
     height:100vh;
-    max-width:1100px;
     overflow:hidden;
-    background:#8ed6ff;
+    background:#77c9ed;
 }
 
 canvas{
@@ -44,230 +46,359 @@ canvas{
     inset:0;
     width:100%;
     height:100%;
-    display:block;
 }
 
-/* ================= HUD ================= */
+/* =========================
+   ARCADE HUD
+========================= */
 
 #hud{
     position:absolute;
-    top:12px;
-    left:12px;
-    right:12px;
+    top:8px;
+    left:8px;
+    right:8px;
 
     display:flex;
     justify-content:space-between;
-    align-items:flex-start;
-
-    color:white;
-    font-weight:900;
-    text-shadow:
-        2px 2px 0 #000,
-        -1px -1px 0 #000;
 
     pointer-events:none;
     z-index:10;
+
+    font-family:monospace;
+    font-weight:900;
 }
 
-.hudBox{
-    background:rgba(0,0,0,.45);
-    border:2px solid rgba(255,255,255,.4);
-    border-radius:12px;
-    padding:8px 12px;
-    min-width:105px;
+.hud{
+    background:#101010;
+    border:3px solid #f5f5f5;
+
+    box-shadow:
+        4px 4px 0 #000;
+
+    padding:5px 9px;
+
+    min-width:95px;
+
+    color:#fff;
 }
 
-.hudLabel{
-    font-size:11px;
-    opacity:.8;
+.label{
+    font-size:9px;
+    color:#aaa;
+    letter-spacing:1px;
 }
 
-.hudValue{
-    font-size:20px;
+.value{
+    font-size:19px;
+    line-height:20px;
+    color:#fff;
 }
 
-/* ================= CENTER MESSAGE ================= */
+/* =========================
+   TITLE
+========================= */
 
-#message{
+#titleLogo{
+
     position:absolute;
+
+    top:50px;
     left:50%;
-    top:22%;
+
     transform:translateX(-50%);
 
-    color:white;
-    font-size:25px;
-    font-weight:900;
-    text-align:center;
+    z-index:5;
+
+    font-family:Impact,
+    Haettenschweiler,
+    sans-serif;
+
+    font-size:clamp(30px,8vw,62px);
+
+    letter-spacing:2px;
+
+    color:#f7e11b;
+
+    -webkit-text-stroke:
+        3px #111;
 
     text-shadow:
-        3px 3px 0 #000,
-        -2px -2px 0 #000;
+        5px 5px 0 #e83b22,
+        8px 8px 0 #111;
+
+    white-space:nowrap;
 
     pointer-events:none;
-    opacity:0;
-
-    z-index:20;
 }
 
-/* ================= OVERLAY ================= */
+/* =========================
+   MESSAGE
+========================= */
 
-#overlay{
+#message{
+
     position:absolute;
-    inset:0;
 
-    display:flex;
-    flex-direction:column;
-    justify-content:center;
-    align-items:center;
+    top:24%;
+    left:50%;
 
-    background:rgba(0,0,0,.58);
+    transform:translate(-50%,-50%);
 
-    color:white;
+    z-index:20;
+
+    color:#fff;
+
+    font-family:Impact,
+    Haettenschweiler,
+    sans-serif;
+
+    font-size:30px;
+
     text-align:center;
 
-    z-index:30;
+    white-space:nowrap;
+
+    text-shadow:
+        3px 3px 0 #111,
+        -2px -2px 0 #111;
+
+    opacity:0;
+
+    pointer-events:none;
+}
+
+/* =========================
+   START SCREEN
+========================= */
+
+#overlay{
+
+    position:absolute;
+
+    inset:0;
+
+    z-index:50;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    flex-direction:column;
+
+    background:
+        linear-gradient(
+            rgba(20,20,20,.5),
+            rgba(20,20,20,.78)
+        );
+
+    color:#fff;
+
+    text-align:center;
 }
 
 #overlay h1{
-    margin:0;
-    font-size:clamp(38px,10vw,75px);
-    font-weight:1000;
-    letter-spacing:3px;
+
+    font-family:Impact,
+    Haettenschweiler,
+    sans-serif;
+
+    font-size:clamp(45px,12vw,90px);
+
+    color:#f5e51b;
+
+    -webkit-text-stroke:
+        3px #111;
 
     text-shadow:
-        5px 5px 0 #000;
+        6px 6px 0 #e43c24,
+        10px 10px 0 #000;
+
+    letter-spacing:2px;
+
+    margin-bottom:10px;
 }
 
-#overlay p{
-    margin:10px 20px 25px;
-    font-size:16px;
-    opacity:.9;
+#overlay .subtitle{
+
+    font-family:monospace;
+
+    font-size:14px;
+
+    line-height:22px;
+
+    margin-bottom:28px;
+
+    max-width:330px;
 }
 
 #startBtn{
-    border:none;
-    border-radius:16px;
 
-    padding:16px 42px;
+    border:4px solid #111;
 
-    background:#ffcc00;
+    background:#f3d51b;
+
     color:#111;
 
-    font-size:22px;
-    font-weight:1000;
+    padding:15px 34px;
+
+    font-family:Impact,
+    Haettenschweiler,
+    sans-serif;
+
+    font-size:25px;
 
     box-shadow:
-        0 6px 0 #a87900,
-        0 10px 20px rgba(0,0,0,.35);
+        6px 6px 0 #000;
 
     cursor:pointer;
+
     touch-action:manipulation;
 }
 
 #startBtn:active{
-    transform:translateY(5px);
+
+    transform:translate(
+        4px,
+        4px
+    );
+
     box-shadow:
-        0 2px 0 #a87900,
-        0 5px 10px rgba(0,0,0,.35);
+        2px 2px 0 #000;
 }
 
-/* ================= CONTROLS ================= */
+/* =========================
+   MOBILE CONTROLS
+========================= */
 
 #controls{
+
     position:absolute;
+
     left:0;
     right:0;
-    bottom:15px;
+    bottom:12px;
+
+    z-index:20;
 
     display:flex;
+
     justify-content:space-between;
-    align-items:flex-end;
 
-    padding:0 14px;
+    padding:0 12px;
 
-    z-index:15;
+    pointer-events:none;
 }
 
-.controlGroup{
+.controlSide{
+
     display:flex;
-    gap:10px;
+
+    gap:9px;
+
+    pointer-events:auto;
 }
 
 .control{
-    width:72px;
-    height:72px;
 
-    border-radius:18px;
-    border:3px solid rgba(255,255,255,.65);
+    width:68px;
+    height:68px;
 
-    background:rgba(0,0,0,.48);
+    border:3px solid #111;
 
-    color:white;
-    font-size:24px;
-    font-weight:1000;
+    background:#e7e7e7;
 
-    display:flex;
-    align-items:center;
-    justify-content:center;
+    color:#111;
+
+    font-size:25px;
+
+    font-weight:900;
 
     box-shadow:
-        0 5px 0 rgba(0,0,0,.4);
+        5px 5px 0 #111;
 
     touch-action:none;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
 }
 
-.control.big{
-    width:88px;
+.control.trick{
+
+    background:#ef3e25;
+
+    color:#fff;
+}
+
+.control.jump{
+
+    background:#f1d51c;
 }
 
 .control:active,
 .control.active{
-    transform:translateY(5px);
-    background:rgba(255,255,255,.25);
+
+    transform:
+        translate(4px,4px);
+
     box-shadow:
-        0 1px 0 rgba(0,0,0,.4);
+        1px 1px 0 #111;
 }
 
-.smallText{
-    font-size:12px;
-    display:block;
-}
+/* =========================
+   HELP
+========================= */
 
-/* ================= RESPONSIVE ================= */
+#hint{
+
+    position:absolute;
+
+    bottom:92px;
+
+    left:50%;
+
+    transform:translateX(-50%);
+
+    z-index:10;
+
+    background:rgba(0,0,0,.65);
+
+    color:white;
+
+    font-family:monospace;
+
+    font-size:10px;
+
+    padding:5px 8px;
+
+    border:2px solid #fff;
+
+    pointer-events:none;
+
+    white-space:nowrap;
+}
 
 @media(max-height:600px){
 
-    .control{
-        width:60px;
-        height:60px;
-        border-radius:15px;
-        font-size:20px;
+    #hint{
+        display:none;
     }
-
-    .control.big{
-        width:75px;
-    }
-
-    #controls{
-        bottom:8px;
-    }
-
-    #hud{
-        top:7px;
-    }
-}
-
-@media(min-width:700px){
 
     .control{
-        width:82px;
-        height:82px;
+        width:58px;
+        height:58px;
     }
 
-    .control.big{
-        width:100px;
+    #titleLogo{
+        top:42px;
     }
+
 }
+
 </style>
 </head>
 
@@ -277,66 +408,75 @@ canvas{
 
 <canvas id="canvas"></canvas>
 
+<div id="titleLogo">
+BROKEN BONEZ
+</div>
+
 <div id="hud">
 
-    <div class="hudBox">
-        <div class="hudLabel">SCORE</div>
-        <div class="hudValue" id="score">0</div>
+    <div class="hud">
+        <div class="label">SCORE</div>
+        <div class="value"
+             id="score">
+            0
+        </div>
     </div>
 
-    <div class="hudBox">
-        <div class="hudLabel">BONEZ</div>
-        <div class="hudValue" id="bonez">0 / 5</div>
+    <div class="hud">
+        <div class="label">BONEZ</div>
+        <div class="value"
+             id="bonez">
+            0 / 5
+        </div>
     </div>
 
-    <div class="hudBox">
-        <div class="hudLabel">DISTANCE</div>
-        <div class="hudValue" id="distance">0</div>
+    <div class="hud">
+        <div class="label">DISTANCE</div>
+        <div class="value"
+             id="distance">
+            0
+        </div>
     </div>
 
 </div>
 
 <div id="message"></div>
 
-<div id="overlay">
-
-    <h1>BROKEN BONEZ</h1>
-
-    <p>
-        Hit the ramps.<br>
-        Spin in the air.<br>
-        LAND ON YOUR WHEELS.
-    </p>
-
-    <button id="startBtn">START GAME</button>
-
+<div id="hint">
+LAND ON YOUR WHEELS
 </div>
+
+<!-- MOBILE CONTROLS -->
 
 <div id="controls">
 
-    <div class="controlGroup">
+    <div class="controlSide">
 
-        <button class="control"
-                id="leftBtn">
+        <button
+            class="control"
+            id="leftBtn">
             ◀
         </button>
 
-        <button class="control"
-                id="rightBtn">
+        <button
+            class="control"
+            id="rightBtn">
             ▶
         </button>
 
     </div>
 
-    <div class="controlGroup">
+    <div class="controlSide">
 
-        <button class="control big"
-                id="jumpBtn">
-            ↑
+        <button
+            class="control jump"
+            id="jumpBtn">
+            ▲
         </button>
 
-        <button class="control big"
-                id="trickBtn">
+        <button
+            class="control trick"
+            id="trickBtn">
             ↻
         </button>
 
@@ -344,7 +484,30 @@ canvas{
 
 </div>
 
+<!-- START -->
+
+<div id="overlay">
+
+    <h1>
+        BROKEN BONEZ
+    </h1>
+
+    <div class="subtitle">
+
+        HIT THE RAMPS<br>
+        GO CRAZY IN THE AIR<br>
+        LAND ON YOUR WHEELS
+
+    </div>
+
+    <button id="startBtn">
+        START GAME
+    </button>
+
 </div>
+
+</div>
+
 
 <script>
 
@@ -352,20 +515,35 @@ canvas{
    CANVAS
 ========================================================= */
 
-const canvas = document.getElementById("canvas");
-const ctx = canvas.getContext("2d");
+const canvas =
+    document.getElementById("canvas");
 
-let W = 0;
-let H = 0;
-let groundY = 0;
+const ctx =
+    canvas.getContext("2d");
+
+let W;
+let H;
+let groundY;
 
 function resize(){
 
-    W = canvas.width = window.innerWidth * devicePixelRatio;
-    H = canvas.height = window.innerHeight * devicePixelRatio;
+    W =
+        window.innerWidth;
 
-    canvas.style.width = window.innerWidth + "px";
-    canvas.style.height = window.innerHeight + "px";
+    H =
+        window.innerHeight;
+
+    canvas.width =
+        W * devicePixelRatio;
+
+    canvas.height =
+        H * devicePixelRatio;
+
+    canvas.style.width =
+        W + "px";
+
+    canvas.style.height =
+        H + "px";
 
     ctx.setTransform(
         devicePixelRatio,
@@ -376,73 +554,39 @@ function resize(){
         0
     );
 
-    W = window.innerWidth;
-    H = window.innerHeight;
-
-    groundY = H * 0.76;
+    groundY =
+        H * .76;
 }
 
-window.addEventListener("resize",resize);
+window.addEventListener(
+    "resize",
+    resize
+);
+
 resize();
 
 
 /* =========================================================
-   GAME VARIABLES
+   GAME
 ========================================================= */
 
 let running = false;
-let gameOver = false;
 
 let score = 0;
+
 let bonez = 0;
+
 let distance = 0;
-let tricks = 0;
 
 let cameraX = 0;
 
 let lastTime = 0;
 
-let particles = [];
-
 let ramps = [];
 
+let particles = [];
 
-/* =========================================================
-   PLAYER
-========================================================= */
-
-const bike = {
-
-    x:150,
-
-    y:0,
-
-    vx:4,
-
-    vy:0,
-
-    width:76,
-    height:38,
-
-    angle:0,
-
-    angularVelocity:0,
-
-    onGround:true,
-
-    airborne:false,
-
-    jumping:false,
-
-    trickRotation:0,
-
-    trickStart:0,
-
-    airTime:0,
-
-    wheelSpin:0
-
-};
+let previousJump = false;
 
 
 /* =========================================================
@@ -458,298 +602,277 @@ const keys = {
 
 };
 
-function bindButton(id,key){
 
-    const btn = document.getElementById(id);
+function button(id,key){
 
-    function down(e){
+    const el =
+        document.getElementById(id);
 
-        e.preventDefault();
+    el.addEventListener(
+        "pointerdown",
+        e=>{
 
-        keys[key] = true;
+            e.preventDefault();
 
-        btn.classList.add("active");
-    }
+            keys[key]=true;
 
-    function up(e){
+            el.classList.add(
+                "active"
+            );
+        }
+    );
 
-        e.preventDefault();
+    el.addEventListener(
+        "pointerup",
+        e=>{
 
-        keys[key] = false;
+            e.preventDefault();
 
-        btn.classList.remove("active");
-    }
+            keys[key]=false;
 
-    btn.addEventListener("pointerdown",down);
-    btn.addEventListener("pointerup",up);
-    btn.addEventListener("pointercancel",up);
-    btn.addEventListener("pointerleave",up);
+            el.classList.remove(
+                "active"
+            );
+        }
+    );
+
+    el.addEventListener(
+        "pointercancel",
+        e=>{
+
+            keys[key]=false;
+
+            el.classList.remove(
+                "active"
+            );
+        }
+    );
+
+    el.addEventListener(
+        "pointerleave",
+        e=>{
+
+            keys[key]=false;
+
+            el.classList.remove(
+                "active"
+            );
+        }
+    );
 }
 
-bindButton("leftBtn","left");
-bindButton("rightBtn","right");
-bindButton("jumpBtn","jump");
-bindButton("trickBtn","trick");
+button("leftBtn","left");
+button("rightBtn","right");
+button("jumpBtn","jump");
+button("trickBtn","trick");
+
+
+/* KEYBOARD */
+
+window.addEventListener(
+    "keydown",
+    e=>{
+
+        if(e.code==="ArrowLeft")
+            keys.left=true;
+
+        if(e.code==="ArrowRight")
+            keys.right=true;
+
+        if(
+            e.code==="ArrowUp" ||
+            e.code==="Space"
+        )
+            keys.jump=true;
+
+        if(
+            e.code==="KeyX" ||
+            e.code==="ShiftLeft"
+        )
+            keys.trick=true;
+    }
+);
+
+window.addEventListener(
+    "keyup",
+    e=>{
+
+        if(e.code==="ArrowLeft")
+            keys.left=false;
+
+        if(e.code==="ArrowRight")
+            keys.right=false;
+
+        if(
+            e.code==="ArrowUp" ||
+            e.code==="Space"
+        )
+            keys.jump=false;
+
+        if(
+            e.code==="KeyX" ||
+            e.code==="ShiftLeft"
+        )
+            keys.trick=false;
+    }
+);
 
 
 /* =========================================================
-   KEYBOARD SUPPORT
+   BIKE
 ========================================================= */
 
-window.addEventListener("keydown",e=>{
+const bike = {
 
-    if(e.code==="ArrowLeft") keys.left=true;
-    if(e.code==="ArrowRight") keys.right=true;
-    if(e.code==="ArrowUp" || e.code==="Space") keys.jump=true;
-    if(e.code==="KeyX" || e.code==="KeyZ") keys.trick=true;
+    x:150,
 
-});
+    y:0,
 
-window.addEventListener("keyup",e=>{
+    vx:4,
 
-    if(e.code==="ArrowLeft") keys.left=false;
-    if(e.code==="ArrowRight") keys.right=false;
-    if(e.code==="ArrowUp" || e.code==="Space") keys.jump=false;
-    if(e.code==="KeyX" || e.code==="KeyZ") keys.trick=false;
+    vy:0,
 
-});
+    angle:0,
+
+    angularVelocity:0,
+
+    onGround:true,
+
+    airborne:false,
+
+    airTime:0,
+
+    trickRotation:0,
+
+    wheelSpin:0,
+
+    width:78,
+
+    height:40
+};
 
 
 /* =========================================================
-   RANDOM RAMP SYSTEM
+   RAMP GENERATION
 ========================================================= */
 
-/*
-    IMPORTANT:
+function randomGap(){
 
-    Ramps are NOT placed completely randomly.
+    /*
+        Random but NEVER ridiculous.
 
-    We keep them inside a controlled range:
+        Most ramps:
+        220 - 360 px
 
-    Minimum gap = 220
-    Maximum gap = 360
+        This keeps the rolling loop
+        playable on mobile.
+    */
 
-    This prevents impossible jumps.
-*/
-
-function randomRampGap(){
-
-    const minGap = 220;
-    const maxGap = 360;
-
-    return minGap + Math.random() * (maxGap-minGap);
+    return 220 +
+        Math.random()*140;
 }
 
-
-/*
-    Create a ramp.
-*/
 
 function createRamp(x){
-
-    const width =
-        105 + Math.random()*35;
-
-    const height =
-        35 + Math.random()*20;
 
     ramps.push({
 
         x:x,
 
-        width:width,
+        width:
+            100+
+            Math.random()*35,
 
-        height:height,
-
-        angle:-0.22
-
+        height:
+            35+
+            Math.random()*22
     });
-
 }
 
-
-/*
-    Generate enough ramps ahead.
-*/
 
 function generateRamps(){
 
     while(
-        ramps.length < 10 ||
-        ramps[ramps.length-1].x <
-        cameraX + W + 500
+
+        ramps.length<10 ||
+
+        ramps[ramps.length-1].x
+        <
+        cameraX+W+500
+
     ){
 
-        let nextX;
+        let x;
 
         if(ramps.length===0){
 
-            nextX = 450;
+            x=430;
 
         }else{
 
             const last =
-                ramps[ramps.length-1];
+                ramps[
+                    ramps.length-1
+                ];
 
-            /*
-                RANDOM BUT CONTROLLED DISTANCE
-            */
-
-            nextX =
-                last.x +
-                last.width +
-                randomRampGap();
+            x =
+                last.x+
+                last.width+
+                randomGap();
         }
 
-        createRamp(nextX);
+        createRamp(x);
     }
 }
 
-
-/*
-    Remove ramps far behind camera.
-*/
 
 function cleanupRamps(){
 
     ramps =
-        ramps.filter(r =>
-            r.x + r.width >
-            cameraX - 500
+        ramps.filter(
+            r =>
+            r.x+r.width
+            >
+            cameraX-500
         );
 }
 
 
 /* =========================================================
-   PARTICLES
+   RAMP SURFACE
 ========================================================= */
 
-function particle(x,y,count=10){
+function getSurface(x){
 
-    for(let i=0;i<count;i++){
+    for(
+        const r of ramps
+    ){
 
-        particles.push({
+        if(
+            x>=r.x &&
+            x<=r.x+r.width
+        ){
 
-            x:x,
-            y:y,
+            const p =
+                (x-r.x)/
+                r.width;
 
-            vx:(Math.random()-.5)*6,
-            vy:-Math.random()*5,
+            const y =
+                groundY-
+                Math.sin(
+                    p*Math.PI/2
+                )*
+                r.height;
 
-            life:1,
+            return {
 
-            size:2+Math.random()*4
-        });
-    }
-}
-
-
-function updateParticles(dt){
-
-    for(const p of particles){
-
-        p.x += p.vx * dt * 60;
-
-        p.y += p.vy * dt * 60;
-
-        p.vy += .25 * dt * 60;
-
-        p.life -= .025 * dt * 60;
+                y:y,
+                ramp:r
+            };
+        }
     }
 
-    particles =
-        particles.filter(p=>p.life>0);
-}
-
-
-function drawParticles(){
-
-    for(const p of particles){
-
-        ctx.globalAlpha=p.life;
-
-        ctx.fillStyle="#ffffff";
-
-        ctx.fillRect(
-            p.x-cameraX,
-            p.y,
-            p.size,
-            p.size
-        );
-    }
-
-    ctx.globalAlpha=1;
-}
-
-
-/* =========================================================
-   START GAME
-========================================================= */
-
-function startGame(){
-
-    running=true;
-    gameOver=false;
-
-    score=0;
-    bonez=0;
-    distance=0;
-    tricks=0;
-
-    cameraX=0;
-
-    particles=[];
-
-    ramps=[];
-
-    bike.x=150;
-    bike.vx=4;
-    bike.vy=0;
-    bike.angle=0;
-    bike.angularVelocity=0;
-
-    bike.onGround=true;
-    bike.airborne=false;
-
-    bike.trickRotation=0;
-    bike.trickStart=0;
-    bike.airTime=0;
-
-    bike.y=groundY-35;
-
-    generateRamps();
-
-    document.getElementById("overlay").style.display="none";
-
-    lastTime=performance.now();
-
-    requestAnimationFrame(loop);
-}
-
-
-/* =========================================================
-   GAME OVER
-========================================================= */
-
-function endGame(){
-
-    running=false;
-    gameOver=true;
-
-    document.getElementById("overlay").style.display="flex";
-
-    document.querySelector("#overlay h1").textContent =
-        "BROKEN BONEZ";
-
-    document.querySelector("#overlay p").innerHTML =
-        `
-        FINAL SCORE: <b>${Math.floor(score)}</b><br>
-        DISTANCE: <b>${Math.floor(distance)}</b><br><br>
-        ${bonez >= 5 ? "5 BROKEN BONEZ!" : "CRASHED!"}
-        `;
-
-    document.getElementById("startBtn").textContent =
-        "PLAY AGAIN";
+    return null;
 }
 
 
@@ -757,9 +880,7 @@ function endGame(){
    JUMP
 ========================================================= */
 
-let previousJump=false;
-
-function handleJump(){
+function jump(){
 
     if(
         keys.jump &&
@@ -770,6 +891,7 @@ function handleJump(){
         bike.vy=-11;
 
         bike.onGround=false;
+
         bike.airborne=true;
 
         bike.airTime=0;
@@ -778,35 +900,43 @@ function handleJump(){
 
         particle(
             bike.x,
-            bike.y+bike.height,
+            bike.y+20,
             8
         );
     }
 
-    previousJump=keys.jump;
+    previousJump =
+        keys.jump;
 }
 
 
 /* =========================================================
-   UPDATE PLAYER
+   UPDATE
 ========================================================= */
 
-function updateBike(dt){
+function update(dt){
 
-    handleJump();
+    jump();
+
 
     /*
-        Constant forward movement.
+        Forward acceleration
     */
 
-    bike.vx += .015 * dt * 60;
+    bike.vx +=
+        .012*dt*60;
 
     bike.vx =
-        Math.min(bike.vx,7.5);
+        Math.min(
+            bike.vx,
+            7.5
+        );
 
 
     /*
-        Gentle leaning.
+        AIR LEAN
+
+        Gentle like previous version.
     */
 
     if(bike.airborne){
@@ -814,18 +944,18 @@ function updateBike(dt){
         if(keys.left){
 
             bike.angularVelocity -=
-                .00035 * dt * 60;
+                .00035*
+                dt*
+                60;
         }
 
         if(keys.right){
 
             bike.angularVelocity +=
-                .00035 * dt * 60;
+                .00035*
+                dt*
+                60;
         }
-
-        /*
-            Keep lean gentle.
-        */
 
         bike.angularVelocity =
             Math.max(
@@ -837,21 +967,11 @@ function updateBike(dt){
             );
     }
 
-    bike.angle +=
-        bike.angularVelocity *
-        dt *
-        60;
-
 
     /*
-        Trick rotation.
+        TRICK
 
-        Hold TRICK and the bike spins.
-
-        360 degrees
-        720 degrees
-        1080 degrees
-        etc.
+        Continuous 360+
     */
 
     if(
@@ -859,59 +979,67 @@ function updateBike(dt){
         keys.trick
     ){
 
-        const spinSpeed =
-            0.12 * dt * 60;
+        const spin =
+            .12*
+            dt*
+            60;
 
-        bike.trickRotation += spinSpeed;
+        bike.trickRotation +=
+            spin;
 
-        bike.angle += spinSpeed;
-
+        bike.angle +=
+            spin;
     }
 
 
-    /*
-        Gravity.
-    */
-
-    bike.vy += .45 * dt * 60;
-
-    bike.y += bike.vy * dt * 60;
-
-    bike.x += bike.vx * dt * 60;
+    bike.angle +=
+        bike.angularVelocity*
+        dt*
+        60;
 
 
     /*
-        Air time.
+        Gravity
     */
+
+    bike.vy +=
+        .45*
+        dt*
+        60;
+
+    bike.x +=
+        bike.vx*
+        dt*
+        60;
+
+    bike.y +=
+        bike.vy*
+        dt*
+        60;
+
 
     if(bike.airborne){
 
-        bike.airTime += dt;
+        bike.airTime +=
+            dt;
     }
 
-
-    /*
-        Ground / ramp collision.
-    */
 
     checkLanding();
 
 
     /*
-        Camera follows bike.
+        CAMERA
     */
 
-    const targetCamera =
-        bike.x - W * .30;
+    const target =
+        bike.x-
+        W*.30;
 
     cameraX +=
-        (targetCamera-cameraX) *
+        (target-cameraX)*
         .08;
 
-
-    /*
-        Distance.
-    */
 
     distance =
         Math.max(
@@ -920,51 +1048,18 @@ function updateBike(dt){
         );
 
 
-    /*
-        Wheel animation.
-    */
-
     bike.wheelSpin +=
-        bike.vx * dt * 0.8;
-}
+        bike.vx*
+        dt*
+        .8;
 
 
-/* =========================================================
-   FIND GROUND / RAMP
-========================================================= */
+    updateParticles();
 
-function getRampSurface(x){
 
-    for(const r of ramps){
+    generateRamps();
 
-        if(
-            x >= r.x &&
-            x <= r.x+r.width
-        ){
-
-            const progress =
-                (x-r.x)/r.width;
-
-            /*
-                Ramp rises toward the end.
-            */
-
-            const surfaceY =
-                groundY -
-                Math.sin(
-                    progress*Math.PI/2
-                ) *
-                r.height;
-
-            return {
-
-                y:surfaceY,
-                ramp:r
-            };
-        }
-    }
-
-    return null;
+    cleanupRamps();
 }
 
 
@@ -974,44 +1069,36 @@ function getRampSurface(x){
 
 function checkLanding(){
 
-    const rearWheelX =
-        bike.x-28;
-
-    const frontWheelX =
-        bike.x+28;
-
     const rear =
-        getRampSurface(rearWheelX);
+        getSurface(
+            bike.x-28
+        );
 
     const front =
-        getRampSurface(frontWheelX);
-
-
-    /*
-        If there is a ramp under the bike,
-        calculate approximate landing height.
-    */
+        getSurface(
+            bike.x+28
+        );
 
     let surface=null;
 
-    if(rear) surface=rear;
-    if(front) surface=front;
+    if(rear)
+        surface=rear;
 
+    if(front)
+        surface=front;
 
-    /*
-        Normal ground.
-    */
 
     if(!surface){
 
         if(
-            bike.y+bike.height >= groundY &&
-            bike.vy >= 0
+            bike.y+
+            bike.height/2
+            >=groundY &&
+            bike.vy>=0
         ){
 
-            landOnSurface(
-                groundY,
-                null
+            land(
+                groundY
             );
         }
 
@@ -1019,61 +1106,46 @@ function checkLanding(){
     }
 
 
-    /*
-        Ramp collision.
-    */
-
-    const wheelBottom =
-        bike.y+bike.height/2;
-
     if(
-        wheelBottom >= surface.y &&
-        bike.vy >= 0
+        bike.y+
+        bike.height/2
+        >=surface.y &&
+        bike.vy>=0
     ){
 
-        landOnSurface(
-            surface.y,
-            surface.ramp
+        land(
+            surface.y
         );
     }
 }
 
 
 /* =========================================================
-   LAND ON SURFACE
+   LAND
 ========================================================= */
 
-function landOnSurface(surfaceY,ramp){
+function land(y){
 
-    const completedRotation =
-        Math.abs(
-            bike.trickRotation
-        );
-
-    const rotations =
-        Math.floor(
-            completedRotation /
-            (Math.PI*2)
+    const normalized =
+        Math.atan2(
+            Math.sin(
+                bike.angle
+            ),
+            Math.cos(
+                bike.angle
+            )
         );
 
 
     /*
-        SAFE LANDING TEST
-
-        Bike should be reasonably upright.
-
-        If it is upside down or sideways,
-        BREAK BONEZ.
+        Wheels must be reasonably
+        close to upright.
     */
 
-    const normalized =
-        Math.atan2(
-            Math.sin(bike.angle),
-            Math.cos(bike.angle)
-        );
-
     const safe =
-        Math.abs(normalized) < 0.65;
+        Math.abs(
+            normalized
+        )<.65;
 
 
     if(!safe){
@@ -1084,80 +1156,84 @@ function landOnSurface(surfaceY,ramp){
     }
 
 
-    /*
-        Successful landing.
-    */
-
     bike.y =
-        surfaceY -
+        y-
         bike.height/2;
 
     bike.vy=0;
 
     bike.onGround=true;
+
     bike.airborne=false;
 
-    bike.angularVelocity *= .2;
+    bike.angularVelocity*=.2;
 
 
     /*
-        Trick scoring.
-
-        360 = 500
-        Larger rotations increase score.
+        COUNT COMPLETE ROTATIONS
     */
+
+    const rotations =
+        Math.floor(
+            Math.abs(
+                bike.trickRotation
+            )/
+            (Math.PI*2)
+        );
+
 
     if(rotations>0){
 
-        tricks += rotations;
-
-        let trickScore=0;
+        let points;
 
         if(rotations===1){
 
-            trickScore=500;
+            points=500;
 
         }else if(rotations===2){
 
-            trickScore=1000;
+            points=1000;
 
         }else if(rotations===3){
 
-            trickScore=2000;
+            points=2000;
 
         }else{
 
-            trickScore=
-                2000 +
+            points=
+                2000+
                 (rotations-3)*1000;
         }
 
-        score += trickScore;
+
+        score +=
+            points;
 
         showMessage(
-            rotations +
-            "× SPIN  +" +
-            trickScore
+            rotations+
+            "X SPIN  +"+
+            points
         );
 
     }else{
 
         /*
-            Normal landing.
+            Canonical normal landing
+            shown in the episode = 10.
         */
 
-        score += 10;
+        score+=10;
 
         showMessage(
-            "LANDING +10"
+            "LAND +10"
         );
     }
 
 
     particle(
         bike.x,
-        surfaceY,
-        10
+        y,
+        12
     );
 
 
@@ -1173,39 +1249,43 @@ function crash(){
 
     bonez++;
 
-    score -= 100;
+    /*
+        Negative points are possible
+        in the original game.
+    */
+
+    score-=100;
+
+    bike.airborne=true;
 
     bike.onGround=false;
-    bike.airborne=true;
 
     bike.vy=-5;
 
     bike.angularVelocity =
-        (Math.random()>.5 ? 1 : -1)
-        * .025;
-
+        (
+            Math.random()>.5
+            ?1
+            :-1
+        )*.025;
 
     particle(
         bike.x,
         bike.y,
-        20
+        25
     );
-
 
     showMessage(
         "BROKEN BONEZ!"
     );
 
-
-    document.getElementById("bonez")
-        .textContent =
-        bonez+" / 5";
+    updateHUD();
 
 
     if(bonez>=5){
 
         setTimeout(
-            endGame,
+            gameOver,
             700
         );
     }
@@ -1213,58 +1293,199 @@ function crash(){
 
 
 /* =========================================================
+   GAME OVER
+========================================================= */
+
+function gameOver(){
+
+    running=false;
+
+    document
+        .getElementById("overlay")
+        .style.display="flex";
+
+    document
+        .querySelector(
+            "#overlay h1"
+        )
+        .textContent=
+        "GAME OVER";
+
+    document
+        .querySelector(
+            "#overlay .subtitle"
+        )
+        .innerHTML=
+        `
+        BROKEN BONEZ: 5<br>
+        SCORE: ${Math.floor(score)}<br>
+        DISTANCE: ${Math.floor(distance)}
+        `;
+
+    document
+        .getElementById(
+            "startBtn"
+        )
+        .textContent=
+        "PLAY AGAIN";
+}
+
+
+/* =========================================================
    MESSAGE
 ========================================================= */
 
-let messageTimer=null;
+let messageTimer;
 
 function showMessage(text){
 
     const el =
-        document.getElementById("message");
+        document.getElementById(
+            "message"
+        );
 
     el.textContent=text;
 
     el.style.opacity=1;
 
-    clearTimeout(messageTimer);
+    clearTimeout(
+        messageTimer
+    );
 
-    messageTimer =
-        setTimeout(()=>{
+    messageTimer=
+        setTimeout(
+            ()=>{
 
-            el.style.opacity=0;
+                el.style.opacity=0;
 
-        },700);
+            },
+            700
+        );
 }
 
 
 /* =========================================================
-   DRAW BACKGROUND
+   PARTICLES
+========================================================= */
+
+function particle(
+    x,
+    y,
+    count
+){
+
+    for(
+        let i=0;
+        i<count;
+        i++
+    ){
+
+        particles.push({
+
+            x:x,
+
+            y:y,
+
+            vx:
+                (Math.random()-.5)*6,
+
+            vy:
+                -Math.random()*5,
+
+            life:1,
+
+            size:
+                2+
+                Math.random()*4
+        });
+    }
+}
+
+
+function updateParticles(){
+
+    for(
+        const p of particles
+    ){
+
+        p.x +=
+            p.vx;
+
+        p.y +=
+            p.vy;
+
+        p.vy +=
+            .25;
+
+        p.life -=
+            .025;
+    }
+
+    particles =
+        particles.filter(
+            p=>p.life>0
+        );
+}
+
+
+function drawParticles(){
+
+    for(
+        const p of particles
+    ){
+
+        ctx.globalAlpha=
+            p.life;
+
+        ctx.fillStyle=
+            "#e3c06b";
+
+        ctx.fillRect(
+            p.x-cameraX,
+            p.y,
+            p.size,
+            p.size
+        );
+    }
+
+    ctx.globalAlpha=1;
+}
+
+
+/* =========================================================
+   BACKGROUND
 ========================================================= */
 
 function drawBackground(){
 
     /*
-        Sky.
+        BLUE ARCADE SKY
     */
 
-    const gradient =
+    const sky =
         ctx.createLinearGradient(
-            0,0,
-            0,H
+            0,
+            0,
+            0,
+            H
         );
 
-    gradient.addColorStop(
+    sky.addColorStop(
         0,
-        "#62c8ff"
+        "#56bde9"
     );
 
-    gradient.addColorStop(
+    sky.addColorStop(
+        .65,
+        "#b8e8f5"
+    );
+
+    sky.addColorStop(
         1,
-        "#d9f4ff"
+        "#e7e1bc"
     );
 
-    ctx.fillStyle=gradient;
+    ctx.fillStyle=sky;
 
     ctx.fillRect(
         0,
@@ -1275,42 +1496,51 @@ function drawBackground(){
 
 
     /*
-        Clouds.
+        BIG SIMPLE CLOUDS
     */
 
-    ctx.fillStyle="rgba(255,255,255,.7)";
+    ctx.fillStyle=
+        "rgba(255,255,255,.75)";
 
-    for(let i=0;i<8;i++){
+    for(
+        let i=0;
+        i<7;
+        i++
+    ){
 
         const x =
-            ((i*300-cameraX*.15)
-            % (W+400))-100;
+            (
+                i*300-
+                cameraX*.12
+            )%
+            (W+400);
 
         const y =
-            80+(i%3)*55;
+            105+
+            (i%3)*48;
 
         ctx.beginPath();
 
         ctx.arc(
             x,
             y,
-            30,
-            0,
-            Math.PI*2
-        );
-
-        ctx.arc(
-            x+35,
-            y-12,
-            38,
-            0,
-            Math.PI*2
-        );
-
-        ctx.arc(
-            x+75,
-            y,
             28,
+            0,
+            Math.PI*2
+        );
+
+        ctx.arc(
+            x+32,
+            y-12,
+            34,
+            0,
+            Math.PI*2
+        );
+
+        ctx.arc(
+            x+68,
+            y,
+            26,
             0,
             Math.PI*2
         );
@@ -1320,34 +1550,49 @@ function drawBackground(){
 
 
     /*
-        Background hills.
+        DISTANT HILLS
     */
 
-    ctx.fillStyle="#77b85a";
+    ctx.fillStyle=
+        "#77a85d";
 
     ctx.beginPath();
 
-    ctx.moveTo(0,groundY);
+    ctx.moveTo(
+        0,
+        groundY
+    );
 
     for(
         let x=0;
-        x<=W+100;
-        x+=50
+        x<=W+50;
+        x+=40
     ){
 
         const y =
             groundY-
-            80-
+            75-
             Math.sin(
-                (x+cameraX*.2)*.01
+                (x+
+                cameraX*.15)*
+                .009
             )*35;
 
-        ctx.lineTo(x,y);
+        ctx.lineTo(
+            x,
+            y
+        );
     }
 
-    ctx.lineTo(W,H);
+    ctx.lineTo(
+        W,
+        H
+    );
 
-    ctx.lineTo(0,H);
+    ctx.lineTo(
+        0,
+        H
+    );
 
     ctx.closePath();
 
@@ -1355,10 +1600,11 @@ function drawBackground(){
 
 
     /*
-        Ground.
+        DIRT
     */
 
-    ctx.fillStyle="#4d3525";
+    ctx.fillStyle=
+        "#9b673d";
 
     ctx.fillRect(
         0,
@@ -1369,53 +1615,114 @@ function drawBackground(){
 
 
     /*
-        Dirt stripes.
+        DIRT STRIPES
     */
 
-    ctx.fillStyle="#684a32";
+    ctx.fillStyle=
+        "#75482d";
 
     for(
         let x=-100;
         x<W+100;
-        x+=90
+        x+=70
     ){
 
         const sx =
-            x -
-            (cameraX*.5)%90;
+            x-
+            (
+                cameraX*
+                .7
+            )%70;
 
         ctx.fillRect(
             sx,
-            groundY+25,
-            45,
-            5
+            groundY+18,
+            35,
+            4
+        );
+
+        ctx.fillRect(
+            sx+18,
+            groundY+45,
+            25,
+            3
         );
     }
+
+
+    /*
+        GRASS LINE
+    */
+
+    ctx.fillStyle=
+        "#3e8a3e";
+
+    ctx.fillRect(
+        0,
+        groundY-6,
+        W,
+        7
+    );
 }
 
 
 /* =========================================================
-   DRAW RAMPS
+   RAMPS
 ========================================================= */
 
 function drawRamps(){
 
-    for(const r of ramps){
+    for(
+        const r of ramps
+    ){
 
         const x =
-            r.x-cameraX;
+            r.x-
+            cameraX;
+
 
         if(
-            x+r.width < -50 ||
-            x > W+50
-        ) continue;
+            x+r.width<-100 ||
+            x>W+100
+        )
+            continue;
 
 
         /*
-            Ramp shape.
+            SHADOW
         */
 
-        ctx.fillStyle="#8b5a35";
+        ctx.fillStyle=
+            "rgba(0,0,0,.2)";
+
+        ctx.beginPath();
+
+        ctx.moveTo(
+            x+5,
+            groundY+8
+        );
+
+        ctx.lineTo(
+            x+r.width+10,
+            groundY+8
+        );
+
+        ctx.lineTo(
+            x+r.width+5,
+            groundY-r.height+8
+        );
+
+        ctx.closePath();
+
+        ctx.fill();
+
+
+        /*
+            RAMP BODY
+        */
+
+        ctx.fillStyle=
+            "#75472b";
 
         ctx.beginPath();
 
@@ -1440,12 +1747,13 @@ function drawRamps(){
 
 
         /*
-            Ramp top.
+            ORANGE TOP
         */
 
-        ctx.strokeStyle="#3d2718";
+        ctx.strokeStyle=
+            "#d18b4c";
 
-        ctx.lineWidth=6;
+        ctx.lineWidth=8;
 
         ctx.beginPath();
 
@@ -1463,55 +1771,40 @@ function drawRamps(){
 
 
         /*
-            Ramp markings.
+            BLACK OUTLINE
         */
 
-        ctx.strokeStyle="#c4874d";
+        ctx.strokeStyle=
+            "#2b1b12";
 
-        ctx.lineWidth=3;
+        ctx.lineWidth=4;
 
-        for(
-            let i=15;
-            i<r.width;
-            i+=25
-        ){
+        ctx.beginPath();
 
-            const progress =
-                i/r.width;
+        ctx.moveTo(
+            x,
+            groundY
+        );
 
-            const y =
-                groundY -
-                Math.sin(
-                    progress*Math.PI/2
-                ) *
-                r.height;
+        ctx.lineTo(
+            x+r.width,
+            groundY-r.height
+        );
 
-            ctx.beginPath();
-
-            ctx.moveTo(
-                x+i,
-                y
-            );
-
-            ctx.lineTo(
-                x+i-8,
-                y+12
-            );
-
-            ctx.stroke();
-        }
+        ctx.stroke();
     }
 }
 
 
 /* =========================================================
-   DRAW BIKE
+   BIKE
 ========================================================= */
 
 function drawBike(){
 
     const x =
-        bike.x-cameraX;
+        bike.x-
+        cameraX;
 
     const y =
         bike.y;
@@ -1529,81 +1822,185 @@ function drawBike(){
 
 
     /*
-        Wheels.
+        SHADOW
+    */
+
+    if(bike.airborne){
+
+        ctx.fillStyle=
+            "rgba(0,0,0,.25)";
+
+        ctx.beginPath();
+
+        ctx.ellipse(
+            0,
+            28+
+            Math.min(
+                50,
+                bike.airTime*30
+            ),
+            34,
+            6,
+            0,
+            0,
+            Math.PI*2
+        );
+
+        ctx.fill();
+    }
+
+
+    /*
+        REAR WHEEL
     */
 
     drawWheel(
-        -28,
-        19
-    );
-
-    drawWheel(
-        28,
-        19
+        -29,
+        18
     );
 
 
     /*
-        Frame.
+        FRONT WHEEL
     */
 
-    ctx.strokeStyle="#111";
+    drawWheel(
+        29,
+        18
+    );
+
+
+    /*
+        BIKE FRAME
+    */
+
+    ctx.strokeStyle=
+        "#151515";
 
     ctx.lineWidth=6;
 
     ctx.beginPath();
 
-    ctx.moveTo(-28,10);
+    ctx.moveTo(
+        -29,
+        8
+    );
 
-    ctx.lineTo(-5,-10);
+    ctx.lineTo(
+        -7,
+        -10
+    );
 
-    ctx.lineTo(28,10);
+    ctx.lineTo(
+        29,
+        9
+    );
 
-    ctx.lineTo(-28,10);
+    ctx.lineTo(
+        -29,
+        8
+    );
 
-    ctx.moveTo(-5,-10);
+    ctx.moveTo(
+        -7,
+        -10
+    );
 
-    ctx.lineTo(12,10);
+    ctx.lineTo(
+        12,
+        8
+    );
 
     ctx.stroke();
 
 
     /*
-        Seat.
+        RED BODY
     */
 
-    ctx.fillStyle="#111";
+    ctx.fillStyle=
+        "#e4472e";
+
+    ctx.beginPath();
+
+    ctx.moveTo(
+        -9,
+        -14
+    );
+
+    ctx.lineTo(
+        14,
+        -9
+    );
+
+    ctx.lineTo(
+        9,
+        4
+    );
+
+    ctx.lineTo(
+        -14,
+        2
+    );
+
+    ctx.closePath();
+
+    ctx.fill();
+
+
+    /*
+        YELLOW DETAIL
+    */
+
+    ctx.fillStyle=
+        "#f2d31b";
 
     ctx.fillRect(
         -10,
-        -16,
+        -8,
+        17,
+        5
+    );
+
+
+    /*
+        SEAT
+    */
+
+    ctx.fillStyle=
+        "#111";
+
+    ctx.fillRect(
+        -13,
+        -19,
         20,
         5
     );
 
 
     /*
-        Handlebar.
+        HANDLE
     */
 
-    ctx.strokeStyle="#111";
+    ctx.strokeStyle=
+        "#111";
 
-    ctx.lineWidth=5;
+    ctx.lineWidth=4;
 
     ctx.beginPath();
 
     ctx.moveTo(
         28,
-        10
+        8
     );
 
     ctx.lineTo(
-        34,
+        35,
         -8
     );
 
     ctx.lineTo(
-        43,
+        44,
         -8
     );
 
@@ -1611,30 +2008,56 @@ function drawBike(){
 
 
     /*
-        Rider body.
+        RIDER BODY
     */
 
-    ctx.fillStyle="#e84b32";
+    ctx.fillStyle=
+        "#2f66c7";
 
     ctx.fillRect(
-        -5,
-        -31,
+        -4,
+        -34,
         17,
-        20
+        22
     );
 
 
     /*
-        Rider head.
+        RIDER ARM
     */
 
-    ctx.fillStyle="#f2c29b";
+    ctx.strokeStyle=
+        "#f0b78d";
+
+    ctx.lineWidth=5;
+
+    ctx.beginPath();
+
+    ctx.moveTo(
+        8,
+        -29
+    );
+
+    ctx.lineTo(
+        29,
+        -12
+    );
+
+    ctx.stroke();
+
+
+    /*
+        HEAD
+    */
+
+    ctx.fillStyle=
+        "#eab48a";
 
     ctx.beginPath();
 
     ctx.arc(
-        4,
-        -39,
+        5,
+        -42,
         9,
         0,
         Math.PI*2
@@ -1644,16 +2067,17 @@ function drawBike(){
 
 
     /*
-        Helmet.
+        HELMET
     */
 
-    ctx.fillStyle="#222";
+    ctx.fillStyle=
+        "#242424";
 
     ctx.beginPath();
 
     ctx.arc(
-        4,
-        -42,
+        5,
+        -44,
         10,
         Math.PI,
         Math.PI*2
@@ -1662,30 +2086,63 @@ function drawBike(){
     ctx.fill();
 
 
+    /*
+        HELMET STRIPE
+    */
+
+    ctx.strokeStyle=
+        "#f1d21c";
+
+    ctx.lineWidth=3;
+
+    ctx.beginPath();
+
+    ctx.moveTo(
+        -2,
+        -51
+    );
+
+    ctx.lineTo(
+        12,
+        -51
+    );
+
+    ctx.stroke();
+
+
     ctx.restore();
 }
 
+
+/* =========================================================
+   WHEEL
+========================================================= */
 
 function drawWheel(x,y){
 
     ctx.save();
 
-    ctx.translate(x,y);
+    ctx.translate(
+        x,
+        y
+    );
 
     ctx.rotate(
         bike.wheelSpin
     );
 
-    ctx.strokeStyle="#111";
 
-    ctx.lineWidth=5;
+    ctx.strokeStyle=
+        "#111";
+
+    ctx.lineWidth=6;
 
     ctx.beginPath();
 
     ctx.arc(
         0,
         0,
-        11,
+        12,
         0,
         Math.PI*2
     );
@@ -1695,10 +2152,14 @@ function drawWheel(x,y){
 
     ctx.lineWidth=2;
 
-    for(let i=0;i<6;i++){
+    for(
+        let i=0;
+        i<8;
+        i++
+    ){
 
         const a =
-            i*Math.PI/3;
+            i*Math.PI/4;
 
         ctx.beginPath();
 
@@ -1725,54 +2186,113 @@ function drawWheel(x,y){
 
 function updateHUD(){
 
-    document.getElementById("score")
-        .textContent =
+    document.getElementById(
+        "score"
+    ).textContent =
         Math.floor(score);
 
-    document.getElementById("bonez")
-        .textContent =
+    document.getElementById(
+        "bonez"
+    ).textContent =
         bonez+" / 5";
 
-    document.getElementById("distance")
-        .textContent =
+    document.getElementById(
+        "distance"
+    ).textContent =
         Math.floor(distance);
 }
 
 
 /* =========================================================
-   MAIN LOOP
+   START
+========================================================= */
+
+function startGame(){
+
+    running=true;
+
+    score=0;
+
+    bonez=0;
+
+    distance=0;
+
+    cameraX=0;
+
+    ramps=[];
+
+    particles=[];
+
+    bike.x=150;
+
+    bike.y=
+        groundY-
+        bike.height/2;
+
+    bike.vx=4;
+
+    bike.vy=0;
+
+    bike.angle=0;
+
+    bike.angularVelocity=0;
+
+    bike.onGround=true;
+
+    bike.airborne=false;
+
+    bike.airTime=0;
+
+    bike.trickRotation=0;
+
+    bike.wheelSpin=0;
+
+    previousJump=false;
+
+    generateRamps();
+
+    updateHUD();
+
+    document.getElementById(
+        "overlay"
+    ).style.display="none";
+
+    document.querySelector(
+        "#overlay h1"
+    ).textContent=
+        "BROKEN BONEZ";
+
+    lastTime=
+        performance.now();
+
+    requestAnimationFrame(
+        loop
+    );
+}
+
+
+/* =========================================================
+   LOOP
 ========================================================= */
 
 function loop(time){
 
-    if(!running) return;
+    if(!running)
+        return;
 
     let dt =
         (time-lastTime)/1000;
 
     lastTime=time;
 
-    /*
-        Prevent huge physics jumps
-        if browser pauses.
-    */
-
-    dt =
-        Math.min(dt,.033);
+    dt=
+        Math.min(
+            dt,
+            .033
+        );
 
 
-    updateBike(dt);
-
-    updateParticles(dt);
-
-    generateRamps();
-
-    cleanupRamps();
-
-
-    /*
-        DRAW
-    */
+    update(dt);
 
     drawBackground();
 
@@ -1785,7 +2305,9 @@ function loop(time){
     updateHUD();
 
 
-    requestAnimationFrame(loop);
+    requestAnimationFrame(
+        loop
+    );
 }
 
 
@@ -1793,33 +2315,29 @@ function loop(time){
    START BUTTON
 ========================================================= */
 
-document
-    .getElementById("startBtn")
-    .addEventListener(
-        "click",
-        startGame
-    );
+document.getElementById(
+    "startBtn"
+).addEventListener(
+    "click",
+    startGame
+);
 
 
 /*
-    Also allow tapping overlay itself
-    if necessary on mobile.
+    Mobile Safari touch fallback
 */
 
-document
-    .getElementById("overlay")
-    .addEventListener(
-        "touchend",
-        e=>{
+document.getElementById(
+    "startBtn"
+).addEventListener(
+    "touchend",
+    e=>{
 
-            if(
-                e.target.id === "overlay"
-            ){
-                startGame();
-            }
+        e.preventDefault();
 
-        }
-    );
+        startGame();
+    }
+);
 
 </script>
 
