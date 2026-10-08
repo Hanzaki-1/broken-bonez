@@ -1,3 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Broken Bonez</title>
+<style>
+  body {
+    margin: 0;
+    background: black;
+    color: yellow;
+    font-family: 'Press Start 2P', monospace;
+    text-align: center;
+    overflow: hidden;
+  }
+  #gameCanvas {
+    background: skyblue;
+    display: block;
+    margin: 0 auto;
+    touch-action: none;
+  }
+  .menu {
+    position: absolute;
+    top: 30%;
+    width: 100%;
+  }
+  .menu h1 {
+    font-size: 2em;
+    color: white;
+    font-family: monospace;
+  }
+  .menu button {
+    background: none;
+    border: none;
+    color: yellow;
+    font-size: 1.2em;
+    margin: 10px;
+    font-family: monospace;
+  }
+  #trickBtn {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: red;
+    color: white;
+    border: none;
+    padding: 15px 25px;
+    font-size: 1em;
+    border-radius: 10px;
+  }
+</style>
+</head>
+<body>
+<div class="menu" id="menu">
+  <h1>BROKEN BONEZ</h1>
+  <button onclick="startGame()">1 PLAYER</button><br>
+  <button>2 PLAYER</button><br>
+  <button>Leaderboard</button>
+</div>
+
+<canvas id="gameCanvas" width="400" height="300"></canvas>
+<button id="trickBtn" style="display:none;" ontouchstart="doTrick()">TRICK</button>
+
+<audio id="bgMusic" src="song.mp3" loop></audio>
+
+<script>
+const canvas = document.getElementById('gameCanvas');
+const ctx = canvas.getContext('2d');
+let player = {x: 200, y: 150, vy: 0, onBike: true};
+let gameRunning = false;
+
+function startGame() {
+  document.getElementById('menu').style.display = 'none';
+  document.getElementById('trickBtn').style.display = 'block';
+  document.getElementById('bgMusic').play();
+  gameRunning = true;
+  gameLoop();
+}
+
+function doTrick() {
+  if (player.onBike) {
+    player.vy = -8;
+    player.onBike = false;
+  }
+}
+
+function gameLoop() {
+  if (!gameRunning) return;
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.fillStyle = 'gray';
+  ctx.fillRect(0, 280, 400, 20); // ground
+
+  // gravity
+  player.vy += 0.5;
+  player.y += player.vy;
+
+  if (player.y > 250) {
+    player.y = 250;
+    player.vy = 0;
+    player.onBike = true;
+  }
+
+  // draw bike and rider
+  ctx.fillStyle = 'red';
+  ctx.fillRect(player.x - 10, player.y - 20, 20, 20); // rider
+  ctx.fillStyle = 'gray';
+  ctx.fillRect(player.x - 20, player.y, 40, 10); // bike
+
+  requestAnimationFrame(gameLoop);
+}
+</script>
+</body>
+</html>
+
+
 <script>
 let ramps = [];
 let scrollSpeed = 2;
