@@ -19,23 +19,24 @@
     margin: 0 auto;
     touch-action: none;
   }
-  .menu {
+  #hud {
     position: absolute;
-    top: 30%;
-    width: 100%;
-  }
-  .menu h1 {
-    font-size: 2em;
+    top: 10px;
+    left: 10px;
     color: white;
-    font-family: monospace;
+    font-size: 12px;
+    text-align: left;
   }
-  .menu button {
-    background: none;
-    border: none;
-    color: yellow;
-    font-size: 1.2em;
-    margin: 10px;
-    font-family: monospace;
+  #bones {
+    margin-top: 5px;
+  }
+  .bone {
+    display: inline-block;
+    width: 20px;
+    height: 5px;
+    background: white;
+    border-radius: 3px;
+    margin-right: 3px;
   }
   #trickBtn {
     position: absolute;
@@ -52,83 +53,44 @@
 </style>
 </head>
 <body>
-<div class="menu" id="menu">
-  <h1>BROKEN BONEZ</h1>
-  <button onclick="startGame()">1 PLAYER</button><br>
-  <button>2 PLAYER</button><br>
-  <button>Leaderboard</button>
+<div id="hud">
+  <div>PLAYER 1 SCORE: <span id="score">0</span></div>
+  <div id="bones"></div>
 </div>
 
 <canvas id="gameCanvas" width="400" height="300"></canvas>
-<button id="trickBtn" style="display:none;" ontouchstart="doTrick()">TRICK</button>
-
+<button id="trickBtn" ontouchstart="doTrick()">TRICK</button>
 <audio id="bgMusic" src="song.mp3" loop></audio>
 
 <script>
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
-let player = {x: 200, y: 150, vy: 0, onBike: true};
-let gameRunning = false;
-
-function startGame() {
-  document.getElementById('menu').style.display = 'none';
-  document.getElementById('trickBtn').style.display = 'block';
-  document.getElementById('bgMusic').play();
-  gameRunning = true;
-  gameLoop();
-}
-
-function doTrick() {
-  if (player.onBike) {
-    player.vy = -8;
-    player.onBike = false;
-  }
-}
-
-function gameLoop() {
-  if (!gameRunning) return;
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  ctx.fillStyle = 'gray';
-  ctx.fillRect(0, 280, 400, 20); // ground
-
-  // gravity
-  player.vy += 0.5;
-  player.y += player.vy;
-
-  if (player.y > 250) {
-    player.y = 250;
-    player.vy = 0;
-    player.onBike = true;
-  }
-
-  // draw bike and rider
-  ctx.fillStyle = 'red';
-  ctx.fillRect(player.x - 10, player.y - 20, 20, 20); // rider
-  ctx.fillStyle = 'gray';
-  ctx.fillRect(player.x - 20, player.y, 40, 10); // bike
-
-  requestAnimationFrame(gameLoop);
-}
-</script>
-</body>
-</html>
-
-
-<script>
+let player = {x: 200, y: 250, vy: 0, angle: 0, spinning: false};
+let score = 0;
+let health = 5;
 let ramps = [];
 let scrollSpeed = 2;
+let gameRunning = true;
+
+function drawBones() {
+  const bonesDiv = document.getElementById('bones');
+  bonesDiv.innerHTML = '';
+  for (let i = 0; i < health; i++) {
+    const bone = document.createElement('div');
+    bone.className = 'bone';
+    bonesDiv.appendChild(bone);
+  }
+}
 
 function createRamp() {
-  const length = Math.random() * 80 + 40; // random length 40–120px
-  const height = Math.random() * 30 + 10; // random height 10–40px
-  const x = canvas.width + Math.random() * 200; // random spacing
+  const length = Math.random() * 80 + 40;
+  const height = Math.random() * 30 + 10;
+  const x = canvas.width + Math.random() * 200;
   ramps.push({x, length, height});
 }
 
 function updateRamps() {
-  for (let r of ramps) {
-    r.x -= scrollSpeed;
-  }
+  for (let r of ramps) r.x -= scrollSpeed;
   ramps = ramps.filter(r => r.x + r.length > 0);
   if (ramps.length < 5) createRamp();
 }
@@ -145,11 +107,28 @@ function drawRamps() {
   }
 }
 
+function doTrick() {
+  if (!player.spinning) {
+    player.spinning = true;
+    let spinAngle = 0;
+    const spinInterval = setInterval(() => {
+      spinAngle += 30;
+      player.angle = spinAngle;
+      if (spinAngle >= 360) {
+        clearInterval(spinInterval);
+        player.spinning = false;
+        player.angle = 0;
+        score += 100;
+        document.getElementById('score').textContent = score;
+      }
+    }, 50);
+  }
+}
+
 function gameLoop() {
-  if (!gameRunning) return;
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   ctx.fillStyle = 'gray';
-  ctx.fillRect(0, 280, 400, 20); // ground
+  ctx.fillRect(0, 280, 400, 20);
 
   updateRamps();
   drawRamps();
@@ -159,14 +138,24 @@ function gameLoop() {
   if (player.y > 250) {
     player.y = 250;
     player.vy = 0;
-    player.onBike = true;
   }
 
+  ctx.save();
+  ctx.translate(player.x, player.y);
+  ctx.rotate((player.angle * Math.PI) / 180);
   ctx.fillStyle = 'red';
-  ctx.fillRect(player.x - 10, player.y - 20, 20, 20);
+  ctx.fillRect(-10, -20, 20, 20);
   ctx.fillStyle = 'gray';
-  ctx.fillRect(player.x - 20, player.y, 40, 10);
+  ctx.fillRect(-20, 0, 40, 10);
+  ctx.restore();
 
+  drawBones();
   requestAnimationFrame(gameLoop);
 }
+
+document.getElementById('bgMusic').play();
+drawBones();
+gameLoop();
 </script>
+</body>
+</html>
