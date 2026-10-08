@@ -1,413 +1,2410 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+<meta name="viewport"
+      content="width=device-width,
+               initial-scale=1,
+               maximum-scale=1,
+               user-scalable=no">
+
 <title>Broken Bonez Mobile</title>
+
 <style>
-*{box-sizing:border-box}
-html,body{
-  margin:0;width:100%;min-height:100%;
-  background:#11101c;color:white;font-family:monospace;
-  overflow-x:hidden;touch-action:pan-y;
+
+*{
+    box-sizing:border-box;
+    -webkit-tap-highlight-color:transparent;
 }
-#cabinet{width:100%;max-width:1000px;margin:auto;padding:8px}
-h1{
-  color:#ffe65a;text-align:center;font-size:clamp(24px,6vw,40px);
-  letter-spacing:3px;text-shadow:3px 3px #c3394d;margin:8px 0;
+
+html,
+body{
+    margin:0;
+    padding:0;
+    width:100%;
+    min-height:100%;
+    background:#100f19;
+    color:white;
+    font-family:monospace;
+    overflow-x:hidden;
+    touch-action:pan-y;
 }
-#subtitle{text-align:center;color:#aaa;font-size:11px;margin-bottom:10px}
-#screen{
-  position:relative;width:100%;overflow:hidden;
-  border:3px solid #66516f;background:#91d6e8;
+
+body{
+    display:flex;
+    justify-content:center;
 }
-canvas{display:block;width:100%;height:auto;image-rendering:pixelated}
+
+#gameContainer{
+    width:100%;
+    max-width:1000px;
+    padding:8px;
+}
+
+/* =========================
+   TITLE
+========================= */
+
+.title{
+    text-align:center;
+    margin:4px 0 2px;
+    font-size:clamp(26px,7vw,44px);
+    letter-spacing:4px;
+    color:#ffe65a;
+    text-shadow:
+        3px 3px #c43d50,
+        6px 6px #241c35;
+}
+
+.subtitle{
+    text-align:center;
+    color:#aaa;
+    font-size:10px;
+    margin-bottom:8px;
+}
+
+/* =========================
+   GAME SCREEN
+========================= */
+
+#gameScreen{
+    position:relative;
+    width:100%;
+    overflow:hidden;
+
+    border:3px solid #65506f;
+    background:#91d6e8;
+
+    box-shadow:
+        0 0 20px rgba(100,70,130,.4);
+}
+
+canvas{
+    display:block;
+    width:100%;
+    height:auto;
+
+    image-rendering:pixelated;
+}
+
+/* =========================
+   START / GAME OVER
+========================= */
+
 #overlay{
-  position:absolute;inset:0;display:flex;
-  flex-direction:column;align-items:center;justify-content:center;
-  gap:12px;background:#100f20e8;padding:18px;text-align:center;
+    position:absolute;
+    inset:0;
+
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+
+    padding:20px;
+    text-align:center;
+
+    background:rgba(12,10,25,.90);
+
+    z-index:20;
 }
-#overlay h2{color:#ffe65a;font-size:clamp(24px,7vw,38px);margin:0}
-#overlay p{font-size:13px;line-height:1.7;max-width:400px}
-button{
-  font-family:monospace;font-weight:bold;cursor:pointer;
-  border:2px solid white;border-radius:10px;
-  background:#f3cf45;color:#171323;padding:14px;
-  font-size:14px;touch-action:none;user-select:none;
-  -webkit-user-select:none;
+
+#overlayTitle{
+    margin:0;
+
+    color:#ffe65a;
+
+    font-size:clamp(28px,8vw,48px);
+
+    letter-spacing:3px;
+
+    text-shadow:
+        3px 3px #c43d50;
 }
-#start{padding:15px 20px;box-shadow:3px 3px #b34759}
+
+#overlayText{
+    max-width:430px;
+
+    color:#ddd;
+
+    font-size:12px;
+
+    line-height:1.8;
+
+    margin:12px 0 18px;
+}
+
+#startButton{
+    border:3px solid white;
+
+    background:#f3cf45;
+
+    color:#171323;
+
+    font-family:monospace;
+
+    font-weight:bold;
+
+    font-size:15px;
+
+    padding:15px 25px;
+
+    border-radius:8px;
+
+    box-shadow:
+        4px 4px #a83e52;
+
+    cursor:pointer;
+
+    touch-action:manipulation;
+}
+
+#startButton:active{
+    transform:translate(3px,3px);
+
+    box-shadow:
+        1px 1px #a83e52;
+}
+
+/* =========================
+   HUD
+========================= */
+
 #hud{
-  display:grid;grid-template-columns:repeat(4,1fr);
-  gap:4px;padding:9px 4px;background:#211b32;
-  border:2px solid #66516f;border-top:0;
+    display:grid;
+
+    grid-template-columns:
+        repeat(4,1fr);
+
+    background:#211a31;
+
+    border:
+        2px solid #65506f;
+
+    border-top:0;
+
+    padding:8px 3px;
+
+    gap:3px;
 }
-.stat{text-align:center;color:#c8bfd9;font-size:10px}
-.stat strong{display:block;color:#ffe65a;font-size:clamp(15px,4vw,20px);margin-top:6px}
+
+.stat{
+    text-align:center;
+
+    color:#aaa;
+
+    font-size:9px;
+}
+
+.stat strong{
+    display:block;
+
+    margin-top:4px;
+
+    color:#ffe65a;
+
+    font-size:
+        clamp(14px,4vw,21px);
+}
+
+/* =========================
+   MOBILE CONTROLS
+========================= */
+
 #controls{
-  display:grid;grid-template-columns:repeat(4,minmax(0,1fr));
-  gap:7px;margin:12px 0;
+    display:grid;
+
+    grid-template-columns:
+        repeat(4,1fr);
+
+    gap:7px;
+
+    margin-top:10px;
 }
-#controls button{
-  min-width:0;width:100%;min-height:66px;padding:6px 2px;
-  background:#4b3967;color:white;font-size:clamp(10px,2.8vw,14px);
-  box-shadow:0 4px #302440;
+
+.control{
+    min-height:70px;
+
+    border:2px solid #817099;
+
+    border-radius:10px;
+
+    background:#493763;
+
+    color:white;
+
+    font-family:monospace;
+
+    font-weight:bold;
+
+    font-size:
+        clamp(10px,3vw,14px);
+
+    box-shadow:
+        0 5px #2b2139;
+
+    user-select:none;
+    -webkit-user-select:none;
+
+    touch-action:none;
+
+    cursor:pointer;
 }
-#controls button.active{background:#f3cf45;color:#171323;transform:translateY(2px);box-shadow:0 2px #302440}
-.help{text-align:center;font-size:11px;color:#c8bfd9;line-height:1.8;margin-bottom:12px}
+
+.control:active,
+.control.active{
+
+    background:#f3cf45;
+
+    color:#171323;
+
+    transform:translateY(4px);
+
+    box-shadow:
+        0 1px #2b2139;
+}
+
+/* Trick button */
+.trickButton{
+    background:#70405f;
+}
+
+/* Jump button */
+.jumpButton{
+    background:#3e6170;
+}
+
+/* =========================
+   HELP
+========================= */
+
+.help{
+    text-align:center;
+
+    color:#aaa;
+
+    font-size:10px;
+
+    line-height:1.7;
+
+    padding:
+        10px 5px 5px;
+}
+
+/* =========================
+   SMALL PHONES
+========================= */
+
+@media(max-width:500px){
+
+    #gameContainer{
+        padding:5px;
+    }
+
+    .title{
+        font-size:27px;
+        letter-spacing:2px;
+    }
+
+    #controls{
+        gap:5px;
+    }
+
+    .control{
+        min-height:64px;
+    }
+
+    .help{
+        font-size:9px;
+    }
+}
+
 </style>
 </head>
+
 <body>
-<div id="cabinet">
-<h1>BROKEN BONEZ</h1>
-<div id="subtitle">MOBILE MOTOCROSS ARCADE</div>
 
-<div id="screen">
-<canvas id="game" width="960" height="540"></canvas>
-<div id="overlay">
-<h2 id="overlayTitle">BROKEN BONEZ</h2>
-<p id="overlayText">Ride the ramps, perform tricks and land safely. Five broken bones ends the game!</p>
-<button id="start">START GAME</button>
-</div>
+<div id="gameContainer">
+
+    <div class="title">
+        BROKEN BONEZ
+    </div>
+
+    <div class="subtitle">
+        MOBILE MOTOCROSS ARCADE
+    </div>
+
+
+    <!-- =========================
+         GAME
+    ========================== -->
+
+    <div id="gameScreen">
+
+        <canvas
+            id="game"
+            width="960"
+            height="540">
+        </canvas>
+
+
+        <div id="overlay">
+
+            <h1 id="overlayTitle">
+                BROKEN BONEZ
+            </h1>
+
+            <div id="overlayText">
+                Ride the ramps.<br>
+                Perform huge tricks.<br>
+                Land safely.<br><br>
+
+                Break 5 bones and the game is over.
+            </div>
+
+            <button id="startButton">
+                START GAME
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================
+         HUD
+    ========================== -->
+
+    <div id="hud">
+
+        <div class="stat">
+            SCORE
+            <strong id="score">
+                0
+            </strong>
+        </div>
+
+        <div class="stat">
+            BROKEN BONEZ
+            <strong id="bones">
+                0 / 5
+            </strong>
+        </div>
+
+        <div class="stat">
+            DISTANCE
+            <strong id="distance">
+                0 m
+            </strong>
+        </div>
+
+        <div class="stat">
+            TRICKS
+            <strong id="tricks">
+                0
+            </strong>
+        </div>
+
+    </div>
+
+
+    <!-- =========================
+         MOBILE BUTTONS
+    ========================== -->
+
+    <div id="controls">
+
+        <button
+            class="control"
+            data-key="ArrowLeft">
+
+            ◀<br>
+            LEAN
+
+        </button>
+
+
+        <button
+            class="control"
+            data-key="ArrowRight">
+
+            LEAN<br>
+            ▶
+
+        </button>
+
+
+        <button
+            class="control jumpButton"
+            data-key="Space">
+
+            ⬆<br>
+            JUMP
+
+        </button>
+
+
+        <button
+            class="control trickButton"
+            data-key="ShiftLeft">
+
+            ★<br>
+            TRICK
+
+        </button>
+
+    </div>
+
+
+    <div class="help">
+
+        HOLD ◀ / ▶ TO LEAN
+        &nbsp; • &nbsp;
+        JUMP TO LAUNCH
+        &nbsp; • &nbsp;
+        HOLD TRICK TO SPIN
+
+        <br>
+
+        360° • 720° • 1080° • MORE
+
+    </div>
+
 </div>
 
-<div id="hud">
-<div class="stat">SCORE<strong id="score">0</strong></div>
-<div class="stat">BROKEN BONEZ<strong id="bones">0 / 5</strong></div>
-<div class="stat">DISTANCE<strong id="distance">0 m</strong></div>
-<div class="stat">AIR TRICKS<strong id="tricks">0</strong></div>
-</div>
-
-<div id="controls">
-<button data-key="ArrowLeft">◀ LEAN</button>
-<button data-key="ArrowRight">LEAN ▶</button>
-<button data-key="Space">⬆ JUMP</button>
-<button data-key="ShiftLeft">★ TRICK</button>
-</div>
-
-<div class="help">
-Hold LEAN gently to adjust your bike angle.<br>
-JUMP to launch • TRICK while airborne • Land on both wheels!
-</div>
-</div>
 
 <script>
-const canvas=document.getElementById("game");
-const ctx=canvas.getContext("2d");
-const W=canvas.width,H=canvas.height;
-const $=id=>document.getElementById(id);
 
-let running=false,ended=false;
-let score=0,bones=0,tricks=0,distance=0;
-let camera=0,speed=0,frame=0,lastTime=0;
-let keys={};
-let bike,ramps=[],particles=[];
+/* =========================================================
+   BROKEN BONEZ
+   MOBILE PROTOTYPE
+========================================================= */
 
-function reset(){
- score=0;bones=0;tricks=0;distance=0;
- camera=0;speed=0;frame=0;particles=[];
- bike={
-  x:150,y:399,vx:0,vy:0,angle:0,angularVelocity:0,
-  grounded:true,airTime:0,stuntTime:0,
-  trickActive:false,crashed:false,wheelRadius:11
- };
- ramps=[];
- for(let x=360;x<12000;x+=300+Math.random()*150){
-  ramps.push({x,height:35+Math.random()*45,width:65+Math.random()*35});
- }
- updateHUD();
+
+/* =========================================================
+   CANVAS
+========================================================= */
+
+const canvas =
+    document.getElementById("game");
+
+const ctx =
+    canvas.getContext("2d");
+
+const W = 960;
+const H = 540;
+
+const $ = id =>
+    document.getElementById(id);
+
+
+/* =========================================================
+   GAME VARIABLES
+========================================================= */
+
+let running = false;
+
+let gameOver = false;
+
+let score = 0;
+
+let bones = 0;
+
+let tricks = 0;
+
+let distance = 0;
+
+let camera = 0;
+
+let speed = 0;
+
+let lastTime = 0;
+
+let keys = {};
+
+let ramps = [];
+
+let particles = [];
+
+let bike;
+
+
+/* =========================================================
+   RESET
+========================================================= */
+
+function resetGame(){
+
+    score = 0;
+
+    bones = 0;
+
+    tricks = 0;
+
+    distance = 0;
+
+    camera = 0;
+
+    speed = 0;
+
+    particles = [];
+
+
+    bike = {
+
+        x:150,
+
+        y:399,
+
+        vx:0,
+
+        vy:0,
+
+
+        /* Current visible rotation */
+        angle:0,
+
+
+        /* Lean rotation */
+        angularVelocity:0,
+
+
+        /*
+         Total trick rotation.
+
+         This is NOT limited to 360.
+
+         360
+         720
+         1080
+         1440
+         etc.
+        */
+        trickRotation:0,
+
+
+        grounded:true,
+
+        airTime:0,
+
+
+        trickActive:false,
+
+        trickStarted:false,
+
+
+        crashed:false,
+
+
+        wheelRadius:11
+
+    };
+
+
+    ramps = [];
+
+
+    /* Create ramps */
+
+    for(
+        let x = 360;
+        x < 15000;
+        x += 300 + Math.random()*150
+    ){
+
+        ramps.push({
+
+            x:x,
+
+            height:
+                35 +
+                Math.random()*45,
+
+            width:
+                65 +
+                Math.random()*35
+
+        });
+
+    }
+
+
+    updateHUD();
+
 }
+
+
+/* =========================================================
+   GROUND
+========================================================= */
 
 function groundY(worldX){
- let y=410;
- for(const r of ramps){
-  if(worldX>=r.x&&worldX<=r.x+r.width){
-   y=410-r.height*((worldX-r.x)/r.width);
-  }else if(worldX>r.x+r.width&&worldX<r.x+r.width+40){
-   y=410-r.height*(1-(worldX-r.x-r.width)/40);
-  }
- }
- return y;
+
+    let y = 410;
+
+
+    for(const r of ramps){
+
+        if(
+            worldX >= r.x &&
+            worldX <= r.x+r.width
+        ){
+
+            const t =
+                (worldX-r.x)/
+                r.width;
+
+            y =
+                410 -
+                r.height*t;
+
+        }
+
+
+        else if(
+            worldX > r.x+r.width &&
+            worldX <
+                r.x+r.width+40
+        ){
+
+            const t =
+                (worldX-r.x-r.width)/
+                40;
+
+            y =
+                410 -
+                r.height*(1-t);
+
+        }
+
+    }
+
+
+    return y;
+
 }
+
+
+/* =========================================================
+   HUD
+========================================================= */
 
 function updateHUD(){
- $("score").textContent=Math.floor(score).toLocaleString();
- $("bones").textContent=bones+" / 5";
- $("distance").textContent=Math.floor(distance)+" m";
- $("tricks").textContent=tricks;
+
+    $("score").textContent =
+        Math.floor(score)
+        .toLocaleString();
+
+
+    $("bones").textContent =
+        bones+" / 5";
+
+
+    $("distance").textContent =
+        Math.floor(distance)+" m";
+
+
+    $("tricks").textContent =
+        tricks;
+
 }
+
+
+/* =========================================================
+   BACKGROUND
+========================================================= */
 
 function drawBackground(){
- ctx.fillStyle="#91d6e8";ctx.fillRect(0,0,W,H);
- ctx.fillStyle="#e4f6f3";
- for(let i=0;i<6;i++){
-  let x=((i*205-camera*.15)%1200+1200)%1200-100;
-  ctx.fillRect(x,85+i%3*32,60,12);
-  ctx.fillRect(x+15,73+i%3*32,38,12);
- }
- ctx.fillStyle="#6cb8a3";ctx.beginPath();ctx.moveTo(0,360);
- for(let x=0;x<=W;x+=20)ctx.lineTo(x,320+Math.sin((x+camera*.25)/85)*25);
- ctx.lineTo(W,H);ctx.lineTo(0,H);ctx.fill();
 
- for(let i=0;i<15;i++){
-  let x=((i*115-camera*.45)%1200+1200)%1200-100;
-  ctx.fillStyle="#70543d";ctx.fillRect(x,335,12,55);
-  ctx.fillStyle="#267d59";
-  ctx.fillRect(x-15,305,42,35);ctx.fillRect(x-7,287,26,25);
- }
+    /* sky */
+
+    ctx.fillStyle =
+        "#91d6e8";
+
+    ctx.fillRect(
+        0,
+        0,
+        W,
+        H
+    );
+
+
+    /* clouds */
+
+    ctx.fillStyle =
+        "#e4f6f3";
+
+
+    for(let i=0;i<7;i++){
+
+        let x =
+            ((i*210-camera*.15)
+            %1200+1200)
+            %1200-100;
+
+
+        let y =
+            70+(i%3)*45;
+
+
+        ctx.fillRect(
+            x,
+            y,
+            65,
+            12
+        );
+
+
+        ctx.fillRect(
+            x+15,
+            y-12,
+            38,
+            12
+        );
+
+    }
+
+
+    /* distant hills */
+
+    ctx.fillStyle =
+        "#6cb8a3";
+
+
+    ctx.beginPath();
+
+    ctx.moveTo(
+        0,
+        360
+    );
+
+
+    for(
+        let x=0;
+        x<=W;
+        x+=20
+    ){
+
+        ctx.lineTo(
+
+            x,
+
+            320+
+            Math.sin(
+                (x+camera*.25)/85
+            )*25
+
+        );
+
+    }
+
+
+    ctx.lineTo(W,H);
+
+    ctx.lineTo(0,H);
+
+    ctx.fill();
+
+
+    /* trees */
+
+    for(let i=0;i<18;i++){
+
+        let x =
+            ((i*115-camera*.45)
+            %1400+1400)
+            %1400-100;
+
+
+        ctx.fillStyle =
+            "#70543d";
+
+        ctx.fillRect(
+            x,
+            335,
+            12,
+            55
+        );
+
+
+        ctx.fillStyle =
+            "#267d59";
+
+        ctx.fillRect(
+            x-15,
+            305,
+            42,
+            35
+        );
+
+
+        ctx.fillRect(
+            x-7,
+            287,
+            26,
+            25
+        );
+
+    }
+
 }
+
+
+/* =========================================================
+   TRACK
+========================================================= */
 
 function drawTrack(){
- ctx.beginPath();ctx.moveTo(0,H);
- for(let x=0;x<=W;x+=4)ctx.lineTo(x,groundY(x+camera));
- ctx.lineTo(W,H);ctx.closePath();
- ctx.fillStyle="#bb8153";ctx.fill();
 
- ctx.strokeStyle="#f1d58c";ctx.lineWidth=5;ctx.beginPath();
- for(let x=0;x<=W;x+=4){
-  const y=groundY(x+camera);
-  if(x===0)ctx.moveTo(x,y);else ctx.lineTo(x,y);
- }
- ctx.stroke();
+    ctx.beginPath();
 
- for(const r of ramps){
-  const x=r.x-camera;
-  if(x<-100||x>W+100)continue;
-  ctx.fillStyle="#e6b95e";
-  ctx.fillRect(x,groundY(r.x)-5,r.width,7);
- }
+    ctx.moveTo(
+        0,
+        H
+    );
+
+
+    for(
+        let x=0;
+        x<=W;
+        x+=4
+    ){
+
+        ctx.lineTo(
+
+            x,
+
+            groundY(
+                x+camera
+            )
+
+        );
+
+    }
+
+
+    ctx.lineTo(W,H);
+
+    ctx.closePath();
+
+
+    ctx.fillStyle =
+        "#bb8153";
+
+    ctx.fill();
+
+
+    /* track edge */
+
+    ctx.strokeStyle =
+        "#f1d58c";
+
+    ctx.lineWidth = 5;
+
+
+    ctx.beginPath();
+
+
+    for(
+        let x=0;
+        x<=W;
+        x+=4
+    ){
+
+        const y =
+            groundY(
+                x+camera
+            );
+
+
+        if(x===0)
+            ctx.moveTo(x,y);
+
+        else
+            ctx.lineTo(x,y);
+
+    }
+
+
+    ctx.stroke();
+
+
+    /* ramps */
+
+    for(const r of ramps){
+
+        const x =
+            r.x-camera;
+
+
+        if(
+            x < -100 ||
+            x > W+100
+        )
+            continue;
+
+
+        ctx.fillStyle =
+            "#e6b95e";
+
+
+        ctx.fillRect(
+
+            x,
+
+            groundY(r.x)-5,
+
+            r.width,
+
+            7
+
+        );
+
+    }
+
 }
+
+
+/* =========================================================
+   BIKE
+========================================================= */
 
 function drawBike(){
- const b=bike;
- ctx.save();ctx.translate(b.x,b.y);ctx.rotate(b.angle);
 
- if(b.grounded){
-  ctx.fillStyle="#65442f";ctx.fillRect(-32,15,65,5);
- }
+    const b = bike;
 
- for(const x of [-24,24]){
-  ctx.beginPath();ctx.arc(x,0,11,0,Math.PI*2);
-  ctx.fillStyle="#252332";ctx.fill();
-  ctx.strokeStyle="#e8e3c9";ctx.lineWidth=3;ctx.stroke();
-  ctx.beginPath();ctx.arc(x,0,3,0,Math.PI*2);
-  ctx.fillStyle="#d94b50";ctx.fill();
- }
 
- ctx.lineWidth=4;ctx.strokeStyle="#e44d45";
- ctx.beginPath();ctx.moveTo(-24,0);ctx.lineTo(-8,-17);
- ctx.lineTo(10,0);ctx.lineTo(24,0);
- ctx.lineTo(8,-17);ctx.lineTo(-8,-17);ctx.stroke();
+    ctx.save();
 
- ctx.strokeStyle="#282438";ctx.lineWidth=5;
- ctx.beginPath();ctx.moveTo(7,-18);ctx.lineTo(16,-24);
- ctx.moveTo(-14,-19);ctx.lineTo(-5,-23);ctx.stroke();
 
- ctx.strokeStyle="#3b3155";ctx.lineWidth=9;
- ctx.beginPath();ctx.moveTo(-5,-22);ctx.lineTo(3,-38);
- ctx.lineTo(13,-25);ctx.stroke();
+    ctx.translate(
+        b.x,
+        b.y
+    );
 
- ctx.fillStyle="#f0b48a";ctx.fillRect(-2,-50,14,13);
- ctx.fillStyle="#ffe15a";ctx.fillRect(-5,-54,19,8);
- ctx.fillStyle="#30223e";ctx.fillRect(8,-48,8,4);
 
- ctx.strokeStyle="#292840";ctx.lineWidth=6;
- ctx.beginPath();ctx.moveTo(-4,-23);ctx.lineTo(-12,-8);
- ctx.lineTo(0,-4);ctx.stroke();
- ctx.restore();
+    ctx.rotate(
+        b.angle
+    );
 
- if(b.trickActive&&!b.grounded){
-  ctx.fillStyle="#fff06a";ctx.font="bold 20px monospace";
-  ctx.fillText("TRICK!",b.x-30,b.y-65);
- }
+
+    /* shadow */
+
+    if(b.grounded){
+
+        ctx.fillStyle =
+            "#65442f";
+
+        ctx.fillRect(
+            -32,
+            15,
+            65,
+            5
+        );
+
+    }
+
+
+    /* wheels */
+
+    for(
+        const x of [-24,24]
+    ){
+
+        ctx.beginPath();
+
+        ctx.arc(
+            x,
+            0,
+            11,
+            0,
+            Math.PI*2
+        );
+
+
+        ctx.fillStyle =
+            "#252332";
+
+        ctx.fill();
+
+
+        ctx.strokeStyle =
+            "#e8e3c9";
+
+        ctx.lineWidth = 3;
+
+        ctx.stroke();
+
+
+        ctx.beginPath();
+
+        ctx.arc(
+            x,
+            0,
+            3,
+            0,
+            Math.PI*2
+        );
+
+
+        ctx.fillStyle =
+            "#d94b50";
+
+        ctx.fill();
+
+    }
+
+
+    /* frame */
+
+    ctx.lineWidth = 4;
+
+    ctx.strokeStyle =
+        "#e44d45";
+
+
+    ctx.beginPath();
+
+    ctx.moveTo(
+        -24,
+        0
+    );
+
+    ctx.lineTo(
+        -8,
+        -17
+    );
+
+    ctx.lineTo(
+        10,
+        0
+    );
+
+    ctx.lineTo(
+        24,
+        0
+    );
+
+    ctx.lineTo(
+        8,
+        -17
+    );
+
+    ctx.lineTo(
+        -8,
+        -17
+    );
+
+    ctx.stroke();
+
+
+    /* handlebars */
+
+    ctx.strokeStyle =
+        "#282438";
+
+    ctx.lineWidth = 5;
+
+
+    ctx.beginPath();
+
+    ctx.moveTo(
+        7,
+        -18
+    );
+
+    ctx.lineTo(
+        16,
+        -24
+    );
+
+
+    ctx.moveTo(
+        -14,
+        -19
+    );
+
+    ctx.lineTo(
+        -5,
+        -23
+    );
+
+
+    ctx.stroke();
+
+
+    /* rider body */
+
+    ctx.strokeStyle =
+        "#3b3155";
+
+    ctx.lineWidth = 9;
+
+
+    ctx.beginPath();
+
+    ctx.moveTo(
+        -5,
+        -22
+    );
+
+    ctx.lineTo(
+        3,
+        -38
+    );
+
+    ctx.lineTo(
+        13,
+        -25
+    );
+
+    ctx.stroke();
+
+
+    /* head */
+
+    ctx.fillStyle =
+        "#f0b48a";
+
+    ctx.fillRect(
+        -2,
+        -50,
+        14,
+        13
+    );
+
+
+    /* helmet */
+
+    ctx.fillStyle =
+        "#ffe15a";
+
+    ctx.fillRect(
+        -5,
+        -54,
+        19,
+        8
+    );
+
+
+    ctx.fillStyle =
+        "#30223e";
+
+    ctx.fillRect(
+        8,
+        -48,
+        8,
+        4
+    );
+
+
+    /* legs */
+
+    ctx.strokeStyle =
+        "#292840";
+
+    ctx.lineWidth = 6;
+
+
+    ctx.beginPath();
+
+    ctx.moveTo(
+        -4,
+        -23
+    );
+
+    ctx.lineTo(
+        -12,
+        -8
+    );
+
+    ctx.lineTo(
+        0,
+        -4
+    );
+
+    ctx.stroke();
+
+
+    ctx.restore();
+
+
+    /* TRICK TEXT */
+
+    if(
+        b.trickActive &&
+        !b.grounded
+    ){
+
+        ctx.fillStyle =
+            "#fff06a";
+
+        ctx.font =
+            "bold 20px monospace";
+
+
+        ctx.fillText(
+            "TRICK!",
+            b.x-30,
+            b.y-70
+        );
+
+
+        /*
+        Show number of rotations
+        */
+
+        const rotations =
+            Math.floor(
+                Math.abs(
+                    b.trickRotation
+                ) /
+                (Math.PI*2)
+            );
+
+
+        if(rotations > 0){
+
+            ctx.fillStyle =
+                "#ffffff";
+
+            ctx.font =
+                "bold 14px monospace";
+
+
+            ctx.fillText(
+
+                rotations+
+                "X 360°",
+
+                b.x-40,
+                b.y-48
+
+            );
+
+        }
+
+    }
+
 }
+
+
+/* =========================================================
+   DRAW
+========================================================= */
 
 function draw(){
- drawBackground();drawTrack();drawBike();
 
- ctx.fillStyle="#211b32";ctx.fillRect(18,18,175,58);
- ctx.fillStyle="#ffe65a";ctx.font="bold 15px monospace";
- ctx.fillText("BIKE SPEED",30,40);
- ctx.fillStyle="#fff";ctx.font="bold 24px monospace";
- ctx.fillText(Math.max(0,Math.floor(speed*8))+" KM/H",30,65);
+    drawBackground();
 
- ctx.fillStyle="#211b32";ctx.fillRect(W-190,18,172,48);
- ctx.fillStyle="#ff7070";ctx.font="bold 15px monospace";
- ctx.fillText("BROKEN BONEZ",W-180,38);
- ctx.fillStyle="#fff";ctx.font="bold 20px monospace";
- ctx.fillText("☠ ".repeat(bones)+"♡ ".repeat(5-bones),W-180,59);
+    drawTrack();
 
- for(const p of particles){
-  ctx.fillStyle=p.color;ctx.fillRect(p.x-camera,p.y,p.size,p.size);
- }
+    drawBike();
+
+
+    /* Speed */
+
+    ctx.fillStyle =
+        "#211b32";
+
+    ctx.fillRect(
+        18,
+        18,
+        175,
+        58
+    );
+
+
+    ctx.fillStyle =
+        "#ffe65a";
+
+    ctx.font =
+        "bold 15px monospace";
+
+
+    ctx.fillText(
+        "BIKE SPEED",
+        30,
+        40
+    );
+
+
+    ctx.fillStyle =
+        "#fff";
+
+    ctx.font =
+        "bold 24px monospace";
+
+
+    ctx.fillText(
+
+        Math.max(
+            0,
+            Math.floor(
+                speed*8
+            )
+        )+
+        " KM/H",
+
+        30,
+        65
+
+    );
+
+
+    /* Bones */
+
+    ctx.fillStyle =
+        "#211b32";
+
+    ctx.fillRect(
+        W-190,
+        18,
+        172,
+        48
+    );
+
+
+    ctx.fillStyle =
+        "#ff7070";
+
+    ctx.font =
+        "bold 15px monospace";
+
+
+    ctx.fillText(
+        "BROKEN BONEZ",
+        W-180,
+        38
+    );
+
+
+    ctx.fillStyle =
+        "#fff";
+
+    ctx.font =
+        "bold 20px monospace";
+
+
+    ctx.fillText(
+
+        "☠ ".repeat(bones)+
+        "♡ ".repeat(
+            5-bones
+        ),
+
+        W-180,
+        59
+
+    );
+
+
+    /* particles */
+
+    for(const p of particles){
+
+        ctx.fillStyle =
+            p.color;
+
+        ctx.fillRect(
+
+            p.x-camera,
+
+            p.y,
+
+            p.size,
+
+            p.size
+
+        );
+
+    }
+
 }
+
+
+/* =========================================================
+   CRASH
+========================================================= */
 
 function crash(){
- if(bike.crashed||ended)return;
- bike.crashed=true;bones++;score-=250;
- for(let i=0;i<16;i++){
-  particles.push({
-   x:bike.x+camera,y:bike.y,
-   vx:(Math.random()-.5)*8,vy:-Math.random()*7,
-   size:3+Math.random()*5,
-   color:["#ffdf61","#f66b66","#fff"][i%3]
-  });
- }
- updateHUD();
- if(bones>=5){
-  ended=true;running=false;
-  $("overlayTitle").textContent="GAME OVER!";
-  $("overlayText").textContent="Five broken bones! Final score: "+Math.floor(score).toLocaleString()+". Try again!";
-  $("start").textContent="PLAY AGAIN";
-  $("overlay").style.display="flex";
- }else{
-  setTimeout(()=>{
-   if(ended)return;
-   bike.crashed=false;bike.grounded=true;bike.vy=0;
-   bike.angle=0;bike.angularVelocity=0;
-   bike.y=groundY(bike.x+camera)-bike.wheelRadius;
-   speed=0;
-  },650);
- }
+
+    if(
+        bike.crashed ||
+        gameOver
+    )
+        return;
+
+
+    bike.crashed =
+        true;
+
+
+    bones++;
+
+
+    score -= 250;
+
+
+    /* explosion */
+
+    for(
+        let i=0;
+        i<20;
+        i++
+    ){
+
+        particles.push({
+
+            x:
+                bike.x+camera,
+
+            y:
+                bike.y,
+
+            vx:
+                (Math.random()-.5)*8,
+
+            vy:
+                -Math.random()*7,
+
+            size:
+                3+
+                Math.random()*5,
+
+            color:[
+                "#ffdf61",
+                "#f66b66",
+                "#fff"
+            ][
+                i%3
+            ]
+
+        });
+
+    }
+
+
+    updateHUD();
+
+
+    if(bones>=5){
+
+        gameOver =
+            true;
+
+        running =
+            false;
+
+
+        $("overlayTitle")
+            .textContent =
+            "GAME OVER!";
+
+
+        $("overlayText")
+            .innerHTML =
+
+            "FIVE BROKEN BONEZ!<br><br>"+
+            "FINAL SCORE: "+
+            Math.floor(score)
+                .toLocaleString()+
+            "<br><br>"+
+            "Can you beat it?";
+
+
+        $("startButton")
+            .textContent =
+            "PLAY AGAIN";
+
+
+        $("overlay")
+            .style.display =
+            "flex";
+
+
+    }else{
+
+        /*
+        Recover after crash
+        */
+
+        setTimeout(()=>{
+
+            if(gameOver)
+                return;
+
+
+            bike.crashed =
+                false;
+
+            bike.grounded =
+                true;
+
+            bike.vy =
+                0;
+
+            bike.angle =
+                0;
+
+            bike.angularVelocity =
+                0;
+
+            bike.trickRotation =
+                0;
+
+
+            bike.y =
+                groundY(
+                    bike.x+camera
+                ) -
+                bike.wheelRadius;
+
+
+            speed = 0;
+
+
+        },650);
+
+    }
+
 }
+
+
+/* =========================================================
+   GAME UPDATE
+========================================================= */
 
 function update(dt){
- if(!running||ended)return;
- frame++;
- const b=bike;
- const left=keys.ArrowLeft||keys.KeyA;
- const right=keys.ArrowRight||keys.KeyD;
- const jump=keys.Space;
- const stunt=keys.ShiftLeft||keys.ShiftRight;
- if(b.crashed)return;
 
- speed=Math.min(12,speed+(right?0.10:0.035));
- if(left)speed=Math.max(2,speed-.09);
- b.vx=speed;
+    if(
+        !running ||
+        gameOver
+    )
+        return;
 
- if(!b.grounded){
-  b.airTime+=dt;
 
-  // GENTLER LEAN: small rotation, capped angle and capped spin speed.
-  const maxLean=0.55;
-  const leanPower=0.00035;
+    const b =
+        bike;
 
-  if(left)b.angularVelocity-=leanPower*dt;
-  if(right)b.angularVelocity+=leanPower*dt;
 
-  b.angularVelocity=Math.max(-0.0025,Math.min(0.0025,b.angularVelocity));
-  b.angularVelocity*=Math.pow(0.94,dt/16);
+    const left =
+        keys.ArrowLeft ||
+        keys.KeyA;
 
-  const nextAngle=b.angle+b.angularVelocity*dt;
-  if(nextAngle>maxLean){
-   b.angle=maxLean;
-   b.angularVelocity=Math.min(0,b.angularVelocity);
-  }else if(nextAngle< -maxLean){
-   b.angle=-maxLean;
-   b.angularVelocity=Math.max(0,b.angularVelocity);
-  }else{
-   b.angle=nextAngle;
-  }
 
-  // Trick behavior retained
-  if(stunt&&!b.trickActive){
-   b.trickActive=true;b.stuntTime=0;
-  }
-  if(b.trickActive){
-   b.stuntTime+=dt;
-   b.angle+=0.007*dt;
-   if(b.stuntTime>900){
-    b.trickActive=false;
-    b.angle=Math.atan2(Math.sin(b.angle),Math.cos(b.angle));
-   }
-  }
+    const right =
+        keys.ArrowRight ||
+        keys.KeyD;
 
-  b.vy+=0.00065*dt;
-  b.y+=b.vy*dt;
-  camera+=b.vx*dt*.055;
-  distance+=b.vx*dt*.002;
 
-  const gy=groundY(b.x+camera)-b.wheelRadius;
-  if(b.y>=gy){
-   b.y=gy;
-   const angle=Math.atan2(Math.sin(b.angle),Math.cos(b.angle));
-   const safe=Math.abs(angle)<0.65&&Math.abs(b.angularVelocity)<0.009;
-   if(!safe){crash();return;}
+    const jump =
+        keys.Space;
 
-   if(b.trickActive||b.stuntTime>0){
-    score+=500+Math.floor(Math.abs(b.angle)*600)+Math.floor(b.airTime/4);
-    tricks++;
-   }else score+=100;
 
-   b.grounded=true;b.vy=0;b.angle=0;
-   b.angularVelocity=0;b.airTime=0;
-   b.trickActive=false;b.stuntTime=0;
-  }
- }else{
-  b.y=groundY(b.x+camera)-b.wheelRadius;
-  b.angle=0;b.angularVelocity=0;
-  camera+=b.vx*dt*.055;
-  distance+=b.vx*dt*.002;
+    const trick =
+        keys.ShiftLeft ||
+        keys.ShiftRight;
 
-  const gx=b.x+camera;
-  for(const r of ramps){
-   if(gx>=r.x+r.width-4&&gx<=r.x+r.width+10){
-    b.grounded=false;b.vy=-0.34-b.vx*.035;
-    b.angularVelocity=0;break;
-   }
-  }
 
-  // Jump unchanged
-  if(jump){
-   b.grounded=false;b.vy=-0.43-b.vx*.025;
-   b.angularVelocity=right?0.002:left?-0.002:0;
-  }
- }
+    if(b.crashed)
+        return;
 
- for(const p of particles){
-  p.x+=p.vx*dt*.05;p.y+=p.vy*dt*.05;p.vy+=.02*dt;
- }
- particles=particles.filter(p=>p.y<H+100);
- updateHUD();
+
+    /* =====================================================
+       SPEED
+    ===================================================== */
+
+    speed =
+        Math.min(
+
+            12,
+
+            speed+
+            (
+                right
+                ? 0.10
+                : 0.035
+            )
+
+        );
+
+
+    if(left){
+
+        speed =
+            Math.max(
+                2,
+                speed-.09
+            );
+
+    }
+
+
+    b.vx =
+        speed;
+
+
+    /* =====================================================
+       AIR
+    ===================================================== */
+
+    if(!b.grounded){
+
+        b.airTime += dt;
+
+
+        /* =================================================
+           LEAN
+        ================================================= */
+
+        const maxLean =
+            0.55;
+
+        const leanPower =
+            0.00035;
+
+
+        if(
+            left &&
+            !trick
+        ){
+
+            b.angularVelocity -=
+                leanPower*dt;
+
+        }
+
+
+        if(
+            right &&
+            !trick
+        ){
+
+            b.angularVelocity +=
+                leanPower*dt;
+
+        }
+
+
+        b.angularVelocity =
+
+            Math.max(
+
+                -0.0025,
+
+                Math.min(
+                    0.0025,
+                    b.angularVelocity
+                )
+
+            );
+
+
+        b.angularVelocity *=
+
+            Math.pow(
+                0.94,
+                dt/16
+            );
+
+
+        /* =================================================
+           TRICK
+        ================================================= */
+
+        if(trick){
+
+            /*
+            First frame of trick
+            */
+
+            if(
+                !b.trickStarted
+            ){
+
+                b.trickStarted =
+                    true;
+
+                b.trickActive =
+                    true;
+
+                b.trickRotation =
+                    0;
+
+            }
+
+
+            /*
+            TRICK SPEED
+
+            This is intentionally
+            much faster than lean.
+
+            Holding the button:
+
+            ~360°
+            ~720°
+            ~1080°
+            etc.
+            */
+
+            const trickSpeed =
+                0.012;
+
+
+            b.angle +=
+                trickSpeed*dt;
+
+
+            b.trickRotation +=
+                trickSpeed*dt;
+
+
+            /*
+            Keep the angle from becoming
+            ridiculously large numerically.
+
+            This does NOT stop the visual
+            rotation.
+            */
+
+            if(
+                b.angle >
+                Math.PI*2
+            ){
+
+                b.angle -=
+                    Math.PI*2;
+
+            }
+
+        }else{
+
+            /*
+            Trick button released.
+
+            Stop trick rotation.
+            */
+
+            b.trickActive =
+                false;
+
+            b.trickStarted =
+                false;
+
+        }
+
+
+        /* =================================================
+           NORMAL LEAN
+
+           Only active when TRICK isn't
+           being held.
+        ================================================= */
+
+        if(!b.trickActive){
+
+            const nextAngle =
+
+                b.angle+
+                b.angularVelocity*dt;
+
+
+            if(
+                nextAngle >
+                maxLean
+            ){
+
+                b.angle =
+                    maxLean;
+
+                b.angularVelocity =
+                    Math.min(
+                        0,
+                        b.angularVelocity
+                    );
+
+            }
+
+            else if(
+                nextAngle <
+                -maxLean
+            ){
+
+                b.angle =
+                    -maxLean;
+
+                b.angularVelocity =
+                    Math.max(
+                        0,
+                        b.angularVelocity
+                    );
+
+            }
+
+            else{
+
+                b.angle =
+                    nextAngle;
+
+            }
+
+        }
+
+
+        /* =================================================
+           GRAVITY
+        ================================================= */
+
+        b.vy +=
+            0.00065*dt;
+
+
+        b.y +=
+            b.vy*dt;
+
+
+        camera +=
+            b.vx*
+            dt*
+            0.055;
+
+
+        distance +=
+            b.vx*
+            dt*
+            0.002;
+
+
+        /* =================================================
+           LANDING
+        ================================================= */
+
+        const gy =
+
+            groundY(
+                b.x+camera
+            )-
+            b.wheelRadius;
+
+
+        if(
+            b.y >= gy
+        ){
+
+            b.y =
+                gy;
+
+
+            /*
+            Number of complete
+            360° rotations
+            */
+
+            const rotations =
+
+                Math.abs(
+                    b.trickRotation
+                ) /
+                (Math.PI*2);
+
+
+            /*
+            At least one full rotation
+            */
+
+            const completed360 =
+                rotations >= 0.90;
+
+
+            /*
+            Normalize final angle
+            */
+
+            const landingAngle =
+
+                Math.atan2(
+
+                    Math.sin(
+                        b.angle
+                    ),
+
+                    Math.cos(
+                        b.angle
+                    )
+
+                );
+
+
+            /*
+            Trick landings are more forgiving.
+            */
+
+            const safe =
+
+                completed360
+
+                ?
+
+                Math.abs(
+                    landingAngle
+                ) < 1.0
+
+                :
+
+                Math.abs(
+                    landingAngle
+                ) < 0.65;
+
+
+            if(!safe){
+
+                crash();
+
+                return;
+
+            }
+
+
+            /* =================================================
+               SCORE
+            ================================================= */
+
+            if(completed360){
+
+                const rotationPoints =
+
+                    Math.floor(
+                        rotations*1000
+                    );
+
+
+                const airPoints =
+
+                    Math.floor(
+                        b.airTime/4
+                    );
+
+
+                score +=
+
+                    500+
+                    rotationPoints+
+                    airPoints;
+
+
+                tricks++;
+
+
+            }else{
+
+                score +=
+                    100;
+
+            }
+
+
+            /*
+            Reset bike after landing
+            */
+
+            b.grounded =
+                true;
+
+            b.vy =
+                0;
+
+            b.angle =
+                0;
+
+            b.angularVelocity =
+                0;
+
+            b.airTime =
+                0;
+
+            b.trickActive =
+                false;
+
+            b.trickStarted =
+                false;
+
+            b.trickRotation =
+                0;
+
+        }
+
+
+    }
+
+
+    /* =====================================================
+       GROUND
+    ===================================================== */
+
+    else{
+
+        b.y =
+
+            groundY(
+                b.x+camera
+            )-
+            b.wheelRadius;
+
+
+        b.angle =
+            0;
+
+        b.angularVelocity =
+            0;
+
+
+        camera +=
+            b.vx*
+            dt*
+            0.055;
+
+
+        distance +=
+            b.vx*
+            dt*
+            0.002;
+
+
+        /* =================================================
+           RAMP
+        ================================================= */
+
+        const gx =
+            b.x+camera;
+
+
+        for(const r of ramps){
+
+            if(
+
+                gx >=
+                    r.x+r.width-4 &&
+
+                gx <=
+                    r.x+r.width+10
+
+            ){
+
+                b.grounded =
+                    false;
+
+
+                b.vy =
+
+                    -0.34-
+                    b.vx*
+                    0.035;
+
+
+                b.angularVelocity =
+                    0;
+
+
+                b.trickRotation =
+                    0;
+
+
+                break;
+
+            }
+
+        }
+
+
+        /* =================================================
+           JUMP
+        ================================================= */
+
+        if(jump){
+
+            b.grounded =
+                false;
+
+
+            b.vy =
+
+                -0.43-
+                b.vx*
+                0.025;
+
+
+            b.angularVelocity =
+
+                right
+                ? 0.002
+                : left
+                    ? -0.002
+                    : 0;
+
+
+            b.trickRotation =
+                0;
+
+        }
+
+    }
+
+
+    /* =====================================================
+       PARTICLES
+    ===================================================== */
+
+    for(const p of particles){
+
+        p.x +=
+            p.vx*
+            dt*
+            0.05;
+
+
+        p.y +=
+            p.vy*
+            dt*
+            0.05;
+
+
+        p.vy +=
+            0.02*dt;
+
+    }
+
+
+    particles =
+        particles.filter(
+            p =>
+                p.y <
+                H+100
+        );
+
+
+    updateHUD();
+
 }
 
-function loop(t){
- const dt=Math.min(32,t-(lastTime||t));
- lastTime=t;update(dt);draw();
- requestAnimationFrame(loop);
+
+/* =========================================================
+   GAME LOOP
+========================================================= */
+
+function gameLoop(time){
+
+    const dt =
+
+        Math.min(
+
+            32,
+
+            time-
+            (
+                lastTime ||
+                time
+            )
+
+        );
+
+
+    lastTime =
+        time;
+
+
+    update(dt);
+
+    draw();
+
+
+    requestAnimationFrame(
+        gameLoop
+    );
+
 }
 
-$("start").addEventListener("click",()=>{
- reset();ended=false;running=true;
- $("overlay").style.display="none";
-});
 
-window.addEventListener("keydown",e=>{
- if(["Space","ArrowLeft","ArrowRight","ShiftLeft","ShiftRight"].includes(e.code))e.preventDefault();
- keys[e.code]=true;
-});
-window.addEventListener("keyup",e=>keys[e.code]=false);
-window.addEventListener("blur",()=>keys={});
+/* =========================================================
+   START BUTTON
+========================================================= */
 
-document.querySelectorAll("[data-key]").forEach(btn=>{
- const key=btn.dataset.key;
- const down=e=>{
-  e.preventDefault();
-  if(btn.setPointerCapture)btn.setPointerCapture(e.pointerId);
-  keys[key]=true;btn.classList.add("active");
- };
- const up=e=>{
-  e.preventDefault();keys[key]=false;
-  btn.classList.remove("active");
- };
- btn.addEventListener("pointerdown",down);
- btn.addEventListener("pointerup",up);
- btn.addEventListener("pointercancel",up);
- btn.addEventListener("lostpointercapture",up);
-});
+$("startButton")
+.addEventListener(
+    "click",
+    function(){
 
-reset();draw();requestAnimationFrame(loop);
+        resetGame();
+
+        gameOver =
+            false;
+
+        running =
+            true;
+
+
+        $("overlay")
+            .style.display =
+            "none";
+
+    }
+);
+
+
+/* =========================================================
+   KEYBOARD
+========================================================= */
+
+window.addEventListener(
+    "keydown",
+    function(e){
+
+        if([
+
+            "Space",
+            "ArrowLeft",
+            "ArrowRight",
+            "ShiftLeft",
+            "ShiftRight"
+
+        ].includes(e.code)){
+
+            e.preventDefault();
+
+        }
+
+
+        keys[e.code] =
+            true;
+
+    }
+);
+
+
+window.addEventListener(
+    "keyup",
+    function(e){
+
+        keys[e.code] =
+            false;
+
+    }
+);
+
+
+window.addEventListener(
+    "blur",
+    function(){
+
+        keys = {};
+
+    }
+);
+
+
+/* =========================================================
+   MOBILE BUTTONS
+========================================================= */
+
+document
+.querySelectorAll(
+    "[data-key]"
+)
+.forEach(
+    button => {
+
+        const key =
+            button.dataset.key;
+
+
+        function press(e){
+
+            e.preventDefault();
+
+
+            if(
+                button.setPointerCapture
+            ){
+
+                try{
+
+                    button.setPointerCapture(
+                        e.pointerId
+                    );
+
+                }catch(err){}
+
+            }
+
+
+            keys[key] =
+                true;
+
+
+            button.classList.add(
+                "active"
+            );
+
+        }
+
+
+        function release(e){
+
+            e.preventDefault();
+
+
+            keys[key] =
+                false;
+
+
+            button.classList.remove(
+                "active"
+            );
+
+        }
+
+
+        button.addEventListener(
+            "pointerdown",
+            press
+        );
+
+
+        button.addEventListener(
+            "pointerup",
+            release
+        );
+
+
+        button.addEventListener(
+            "pointercancel",
+            release
+        );
+
+
+        button.addEventListener(
+            "lostpointercapture",
+            release
+        );
+
+    }
+);
+
+
+/* =========================================================
+   INITIALIZE
+========================================================= */
+
+resetGame();
+
+draw();
+
+requestAnimationFrame(
+    gameLoop
+);
+
 </script>
+
 </body>
 </html>
